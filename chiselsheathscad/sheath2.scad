@@ -17,7 +17,21 @@ sheath_front_thickness = 4; // thickness in front of the chisel in mm
 minkowski_radius = 1;          // round-over radius of the sheath in mm
 very_tip_thickness_buffer = 1; // the tip goes to 0 thickness but we buffer it to this thickness instead
 
+
+// 🐻 Bear ears parameters
+enable_ears = true;
+ear_radius = chisel_tip_thickness*2/3;       // radius of each bear ear
+ear_offset_y = chisel_width/3;     // side offset from center
+ear_offset_z = 0;     // vertical offset above top surface
+
+// 👀 eyes parameters (these are for preventing rust)
+enable_eyes = true;
+eye_radius = ear_radius / 3;    // or tweak as you like
+eye_length = chisel_tip_thickness + sheath_wall_thickness * 2 + 1;  // enough to cut through
+eye_offset_y = ear_offset_y * 0.8;   // inward from ears
+
 // 吕 PARAMETERS
+enable_logo = true;
 logo_width = 7;           // Width of the bottom box
 logo_height = 4;           // Height of the bottom box
 logo_top_scale = 0.8;      // Ratio of top box width to bottom box
@@ -81,31 +95,58 @@ module chisel_shape(
     }
 }
 
-/*
-chisel_shape(
-    chisel_width = chisel_width,
-    chisel_tip_thickness = chisel_tip_thickness,
-    chisel_end_thickness = chisel_end_thickness,
-    chisel_bevel_length = chisel_bevel_length,
-    chisel_length = chisel_length
-);*/
+
+// 🐻 Bear ears module
+module bear_ears() {
+    union() {
+        // Left ear
+        translate([chisel_tip_thickness/2, -ear_offset_y, chisel_length + sheath_front_thickness + ear_offset_z])
+            scale([0.8,1,1])
+                sphere(r = ear_radius, $fn = 32);
+        
+        // Right ear
+        translate([chisel_tip_thickness/2, ear_offset_y, chisel_length + sheath_front_thickness + ear_offset_z])
+            scale([0.8,1,1])
+                sphere(r = ear_radius, $fn = 32);
+    }
+}
+
+// eyes module
+module eyes() {
+    eye_offset_z = chisel_length;
+    for (side = [-1, 1]) {
+        translate([eye_length, side * eye_offset_y, eye_offset_z])
+            rotate([0, 90, 0])  // align along X-axis
+                cylinder(r = eye_radius, h = eye_length, center = true, $fn = 24);
+    }
+}
 
 // Rounded sheath shape using Minkowski sum
 module sheath_shape() {
     difference() {
         // OUTER: apply minkowski to outer sheath only
-        minkowski() {
-            // union bear years with this object
-            chisel_shape(
-                chisel_width = chisel_width + sheath_side_thickness * 2,
-                chisel_tip_thickness = chisel_tip_thickness + sheath_wall_thickness * 2,
-                chisel_end_thickness = chisel_end_thickness + sheath_wall_thickness * 2,
-                chisel_bevel_length = chisel_bevel_length + sheath_front_thickness,
-                chisel_length = chisel_length + sheath_front_thickness,
-                very_tip_thickness_buffer = very_tip_thickness_buffer + sheath_wall_thickness * 2
-            );
-            sphere(r = minkowski_radius, $fn = 24);  // small sphere for smooth edges
+        union() {
+            minkowski() {
+                chisel_shape(
+                    chisel_width = chisel_width + sheath_side_thickness * 2,
+                    chisel_tip_thickness = chisel_tip_thickness + sheath_wall_thickness * 2,
+                    chisel_end_thickness = chisel_end_thickness + sheath_wall_thickness * 2,
+                    chisel_bevel_length = chisel_bevel_length + sheath_front_thickness,
+                    chisel_length = chisel_length + sheath_front_thickness,
+                    very_tip_thickness_buffer = very_tip_thickness_buffer + sheath_wall_thickness * 2
+                );
+                sphere(r = minkowski_radius, $fn = 24);  // small sphere for smooth edges
+            };
+            // 🐻 Only add bear ears if enabled
+            if (enable_ears) {
+                bear_ears();
+            }
         }
+        //
+        if (enable_eyes) {
+            eyes();
+        }
+
 
         // INNER: the actual chisel cavity, offset for wall thickness
         translate([sheath_wall_thickness,0,-poop])
@@ -177,7 +218,6 @@ module logo_on_sheath(style, side) {
         translate([x_offset, y_offset, z_offset])
             rotate([0, -taper_angle, 0]) // match slope
             rotate([0, 0, -90])          // face outward
-            
                 logo();
     }
 }
@@ -187,12 +227,16 @@ module logo_on_sheath(style, side) {
 if (logo_style == "emboss") {
     union() {
         sheath_shape();
-        logo_on_sheath("emboss", logo_side);
+        if (enable_logo) {
+            logo_on_sheath("emboss", logo_side);
+        }
     }
 }
 else {
     difference() {
         sheath_shape();
-        logo_on_sheath("engrave", logo_side);
+        if (enable_logo) {
+            logo_on_sheath("engrave", logo_side);
+        }
     }
 }
