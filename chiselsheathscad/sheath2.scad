@@ -21,14 +21,13 @@ very_tip_thickness_buffer = 1; // the tip goes to 0 thickness but we buffer it t
 // 🐻 Bear ears parameters
 enable_ears = true;
 ear_radius = chisel_tip_thickness*2/3;       // radius of each bear ear
-ear_offset_y = chisel_width/3;     // side offset from center
-ear_offset_z = 0;     // vertical offset above top surface
+ear_style = "top"; // "side" or "top"
 
 // 👀 eyes parameters (these are for preventing rust)
 enable_eyes = true;
-eye_radius = ear_radius / 3;    // or tweak as you like
-eye_length = chisel_tip_thickness + sheath_wall_thickness * 2 + 1;  // enough to cut through
-eye_offset_y = ear_offset_y * 0.8;   // inward from ears
+eye_radius = ear_radius / 2;    // or tweak as you like
+
+
 
 // 吕 PARAMETERS
 enable_logo = true;
@@ -98,21 +97,28 @@ module chisel_shape(
 
 // 🐻 Bear ears module
 module bear_ears() {
+    side_ears = ear_style == "side" ? true : false;
+    x_offset = side_ears ? (chisel_tip_thickness + sheath_wall_thickness*2)/2 : chisel_tip_thickness/2;
+    y_offset = side_ears ? (chisel_width + sheath_side_thickness*2) / 2 : chisel_width/3;
+    z_offset = side_ears ? (chisel_length * 9/10) : chisel_length + sheath_front_thickness;
+    x_scale = side_ears ? 1 : 0.8;
     union() {
         // Left ear
-        translate([chisel_tip_thickness/2, -ear_offset_y, chisel_length + sheath_front_thickness + ear_offset_z])
-            scale([0.8,1,1])
+        translate([x_offset, -y_offset, z_offset])
+            scale([x_scale,1,1])
                 sphere(r = ear_radius, $fn = 32);
         
         // Right ear
-        translate([chisel_tip_thickness/2, ear_offset_y, chisel_length + sheath_front_thickness + ear_offset_z])
-            scale([0.8,1,1])
+        translate([x_offset, y_offset, z_offset])
+            scale([x_scale,1,1])
                 sphere(r = ear_radius, $fn = 32);
     }
 }
 
 // eyes module
 module eyes() {
+    eye_length = chisel_tip_thickness + sheath_wall_thickness * 2 + 1;  // enough to cut through
+    eye_offset_y = (chisel_width/3) * 0.8;   // inward from ears
     eye_offset_z = chisel_length;
     for (side = [-1, 1]) {
         translate([eye_length, side * eye_offset_y, eye_offset_z])
