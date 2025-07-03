@@ -1,43 +1,63 @@
 // Chisel Sheath by 吕 minimaple 
-
-
 // CHISEL PARAMETERS
-chisel_width = 19;         // width of chisel in mm
-chisel_tip_thickness = 4.9;  // thickness of chisel right where the bevel starts in mm
-chisel_end_thickness = 6.5;  // thickness of chisel at end of sheath in mm
-chisel_bevel_length = 5; // the length of the bevel (tapering to 0mm)
+// width of chisel in mm
+chisel_width = 19;
+
+// thickness of chisel right where the bevel starts in mm
+chisel_tip_thickness = 4.9;
+
+// thickness of chisel at end of sheath in mm
+chisel_end_thickness = 6.5;
+
+// The length of the bevel (tapering to 0mm). You can set this to 0 if you don't want the chisel shape in the mortise.
+chisel_bevel_length = 5;
+
 
 // SHEATH PARAMETERS
-chisel_length = 62;        // length of the chisel (measured from the tip) you want inside the sheath in mm
-sheath_wall_thickness = 2; // wall thickness (top/bottom) in mm
-sheath_side_thickness = 3; // side wall thickness in mm
-sheath_front_thickness = 4; // thickness in front of the chisel in mm
+// length of the chisel (measured from the tip) you want inside the sheath in mm
+chisel_length = 62;
 
-// ADDITIONAL PARAMETERS (unlikel you need to change)
-minkowski_radius = 1;          // round-over radius of the sheath in mm
-very_tip_thickness_buffer = 1; // the tip goes to 0 thickness but we buffer it to this thickness instead
+// wall thickness (top/bottom) in mm
+sheath_wall_thickness = 2;
 
+// side wall thickness in mm
+sheath_side_thickness = 3;
 
-// 🐻 Bear ears parameters
+// thickness in front of the chisel in mm
+sheath_front_thickness = 4;
+
+// add the bevel shape at the front of the chisel sheath
+enable_sheath_bevel = true;
+
+// round-over radius of the sheath in mm
+minkowski_radius = 1;
+
+// (don't change me) the tip goes to 0 thickness but we buffer it to this thickness instead
+very_tip_thickness_buffer = 1;
+
+// add some cute ears 🐻 
 enable_ears = true;
-ear_radius = chisel_tip_thickness*2/3;       // radius of each bear ear
-ear_style = "top"; // "side" or "top"
+// radius of each ear
+ear_radius = chisel_tip_thickness*2/3;       
+// "side" or "top"
+ear_style = "top"; 
 
-// 👀 eyes parameters (these are for preventing rust)
+// add some cute eye holes 👀(these are for preventing rust)
 enable_eyes = true;
-eye_radius = ear_radius / 2;    // or tweak as you like
+eye_radius = ear_radius / 2; 
+// position of the eyes relative to the height of the sheath (0 at the bottom, 1 at the top)
+eye_position_ratio = 0.8;
 
 
 
-// 吕 PARAMETERS
+// add the minimaple logo 吕 
 enable_logo = true;
-logo_width = 7;           // Width of the bottom box
-logo_height = 4;           // Height of the bottom box
-logo_top_scale = 0.8;      // Ratio of top box width to bottom box
-logo_spacing = 1.5;          // Vertical gap between the two boxes
-logo_depth = 1;            // Depth of emboss (engrave) in mm
-logo_style = "emboss"; // "emboss" or "engrave"
-logo_side = "bevel"; // "bevel" or "back"
+// depth of emboss (engrave) in mm
+logo_depth = 1;            
+// "emboss" or "engrave"
+logo_style = "emboss"; 
+// "bevel" or "back"
+logo_side = "bevel"; 
 
 
 // openscad has lots of z fighting type issues so offset to prevent them
@@ -119,7 +139,7 @@ module bear_ears() {
 module eyes() {
     eye_length = chisel_tip_thickness + sheath_wall_thickness * 2 + 1;  // enough to cut through
     eye_offset_y = (chisel_width/3) * 0.8;   // inward from ears
-    eye_offset_z = chisel_length;
+    eye_offset_z = (chisel_length + sheath_front_thickness) * eye_position_ratio;
     for (side = [-1, 1]) {
         translate([eye_length, side * eye_offset_y, eye_offset_z])
             rotate([0, 90, 0])  // align along X-axis
@@ -137,7 +157,7 @@ module sheath_shape() {
                     chisel_width = chisel_width + sheath_side_thickness * 2,
                     chisel_tip_thickness = chisel_tip_thickness + sheath_wall_thickness * 2,
                     chisel_end_thickness = chisel_end_thickness + sheath_wall_thickness * 2,
-                    chisel_bevel_length = chisel_bevel_length + sheath_front_thickness,
+                    chisel_bevel_length = enable_sheath_bevel ? chisel_bevel_length + sheath_front_thickness : 0,
                     chisel_length = chisel_length + sheath_front_thickness,
                     very_tip_thickness_buffer = very_tip_thickness_buffer + sheath_wall_thickness * 2
                 );
@@ -171,6 +191,10 @@ module sheath_shape() {
 
 // Engrave the 吕 logo on the front face
 module logo() {
+    logo_width = 7;           // Width of the bottom box
+    logo_height = 4;           // Height of the bottom box
+    logo_top_scale = 0.8;      // Ratio of top box width to bottom box
+    logo_spacing = 1.5;          // Vertical gap between the two boxes
 
      minkowski() {
         rotate([90,0,0]) {
