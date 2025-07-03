@@ -6,6 +6,7 @@ block_length = 228.6;  // 9 * 25.4
 block_width  = 152.4;  // 6 * 25.4
 block_height = 101.6;  // 4 * 25.4
 
+// standard flat block
 //block_length = 228.6;  // 9 * 25.4
 //block_width  = 152.4;  // 6 * 25.4
 //block_height = 76.2;   // 3 * 25.4
