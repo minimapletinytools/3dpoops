@@ -1,22 +1,22 @@
 // Yoga Block by 吕 minimaple 
 
-
-// minimaple sized block
-// block size in mm
-block_length = 177.8;  // 7 * 25.4
-block_width  = 127;    // 5 * 25.4
-block_height = 76.2;   // 3 * 25.4
-
 // standard block
-//block_length = 228.6;  // 9 * 25.4
-//block_width  = 152.4;  // 6 * 25.4
-//block_height = 101.6;  // 4 * 25.4
+// block size in mm
+block_length = 228.6;  // 9 * 25.4
+block_width  = 152.4;  // 6 * 25.4
+block_height = 101.6;  // 4 * 25.4
 
 //block_length = 228.6;  // 9 * 25.4
 //block_width  = 152.4;  // 6 * 25.4
 //block_height = 76.2;   // 3 * 25.4
 
-// how much to chamfer the edges of the block
+// minimaple sized block
+//block_length = 177.8;  // 7 * 25.4
+//block_width  = 127;    // 5 * 25.4
+//block_height = 76.2;   // 3 * 25.4
+
+
+// how much to chamfer the edges of the block in mm
 chamfer_radius = 7;  
 
 // "round" or "flat"
