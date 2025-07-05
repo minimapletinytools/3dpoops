@@ -1,0 +1,30 @@
+// geta chisel
+chisel_width = 48.5;
+chisel_tip_thickness = 4.5;
+chisel_end_thickness = 4.8;
+chisel_bevel_length = 0;
+chisel_length = 130;
+
+
+// ouchi chisel
+chisel_width = 49;
+chisel_tip_thickness = 4.3;
+chisel_end_thickness = 6.7;
+chisel_bevel_length = 0;
+chisel_length = 57;
+
+// timber chisel
+chisel_width = 24;
+chisel_tip_thickness = 8.3;
+chisel_end_thickness = 9.3;
+chisel_bevel_length = 17;
+chisel_length = 68;
+
+
+
+// skinny chisel
+chisel_width = 9;
+chisel_tip_thickness = 2.40;
+chisel_end_thickness = 4.35;
+chisel_bevel_length = 0;
+chisel_length = 75;
