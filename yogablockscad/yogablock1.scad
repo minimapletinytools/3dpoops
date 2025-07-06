@@ -18,13 +18,18 @@ block_height = 101.6;  // 4 * 25.4
 
 
 // how much to chamfer the edges of the block in mm
-chamfer_radius = 7;  
+chamfer_radius = 5;  
 
-// "round" or "flat"
-chamfer_style = "round";  
+
+
+// "round", "flat", "rounded_flat"
+chamfer_style = "rounded_flat";  
 
 // increase for smoother edges, decrease for a cool polygon look I guess
 chamfer_resolution = 64;  
+
+// radius of rounding for "rounded_flat" style
+rounded_flat_radius = 3;
 
 
 // Logo parameters
@@ -46,24 +51,40 @@ yoga_block(block_length, block_width, block_height, chamfer_radius, chamfer_styl
 // ===================================
 // Main Yoga Block Module
 module yoga_block(length, width, height, chamfer_r, chamfer_style) {
-    // To compensate for Minkowski expansion, shrink the base
-    shrink = chamfer_r;
-
-    base_length = length - 2*shrink;
-    base_width  = width  - 2*shrink;
-    base_height = height - 2*shrink;
+    
 
     module round_block() {
-            minkowski() {
+        // To compensate for Minkowski expansion, shrink the base
+        base_length = length - 2*chamfer_r;
+        base_width  = width  - 2*chamfer_r;
+        base_height = height - 2*chamfer_r;
+        minkowski() {
             cube([base_length, base_width, base_height], center=true);
             sphere(r=chamfer_r, $fn=chamfer_resolution);
         };
     }
 
     module flat_block() {
+        base_length = length - 2*chamfer_r;
+        base_width  = width  - 2*chamfer_r;
+        base_height = height - 2*chamfer_r;
         minkowski() {
             cube([base_length, base_width, base_height], center=true);
             octahedron(chamfer_r);
+        };
+    }
+
+    module rounded_flat_block() {
+        base_length = length - 2*(chamfer_r + rounded_flat_radius);
+        base_width  = width  - 2*(chamfer_r + rounded_flat_radius);
+        base_height = height - 2*(chamfer_r + rounded_flat_radius);
+
+        minkowski() {
+            minkowski() {
+                cube([base_length, base_width, base_height], center=true);
+                octahedron(chamfer_r);
+            };
+            sphere(r=rounded_flat_radius, $fn=chamfer_resolution);
         };
     }
 
@@ -76,7 +97,10 @@ module yoga_block(length, width, height, chamfer_r, chamfer_style) {
             round_block();
         } else if (chamfer_style == "flat") {
             flat_block();
-        } else {
+        } else if (chamfer_style == "rounded_flat") {
+            rounded_flat_block();
+        } else
+        {
             just_a_block();
         }
     } 

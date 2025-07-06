@@ -37,6 +37,8 @@ very_tip_thickness_buffer = 1;
 
 // add some cute ears 🐻 
 enable_ears = true;
+
+// TODO change to bear ear width, maybe add bear ear depth parameter
 // radius of each ear
 ear_radius = chisel_tip_thickness*2/3;       
 // "side" or "top"
@@ -126,12 +128,12 @@ module bear_ears() {
         // Left ear
         translate([x_offset, -y_offset, z_offset])
             scale([x_scale,1,1])
-                sphere(r = ear_radius, $fn = 32);
+                sphere(r = ear_radius, $fn = 64);
         
         // Right ear
         translate([x_offset, y_offset, z_offset])
             scale([x_scale,1,1])
-                sphere(r = ear_radius, $fn = 32);
+                sphere(r = ear_radius, $fn = 64);
     }
 }
 

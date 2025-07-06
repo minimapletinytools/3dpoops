@@ -16,7 +16,7 @@ I think PLA is fine as long as you don't plan on dropping your chisel, but you m
 
 ## Configuring for your chisel
 
-Use a pair of calipers to measure your chisel at the various dimensions listed in the parameter comments. Don't worry too much about accuracy. The fudge room for this is very large. You can/should make the width bevel length longer (+2mm) and/or the thicknesses slightly smaller (-0.1mm) to ensure a good fit.
+Use a pair of calipers to measure your chisel at the various dimensions listed in the parameter comments. Don't worry too much about accuracy. The fudge room for this is very large. You can/should make the width bevel length longer (+2mm) and/or the thicknesses slightly smaller (-0.1mm) to ensure a good fit. You should also make the width a little wider (+0.5mm) as prints tend to be slightly over dimension.
 
 Be sure to dry your chisels before inserting to avoid rust. Applying oil to your tools is always a good idea! The eye holes can also help avoid moisture buildup.
 
