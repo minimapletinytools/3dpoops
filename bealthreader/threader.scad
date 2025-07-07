@@ -72,7 +72,8 @@ module wood_threader() {
                 d = screw_diameter,
                 l = width + poop*2,
                 pitch = 25.4/tpi, // Convert TPI to pitch in mm
-                internal = true
+                internal = true,
+                $fn=64
             );
         }
 

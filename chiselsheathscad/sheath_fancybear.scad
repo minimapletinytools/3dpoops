@@ -38,15 +38,22 @@ very_tip_thickness_buffer = 1;
 // add some cute ears 🐻 
 enable_ears = true;
 
-// TODO change to bear ear width, maybe add bear ear depth parameter
-// radius of each ear
-ear_radius = chisel_tip_thickness*2/3;       
-// "side" or "top"
-ear_style = "top"; 
+// distance between the ears in mm
+ear_distance = 12;
+// height of the cylinder in the sheath length plane in mm
+ear_height = 5;
+// width of the cylinder in mm
+ear_width = 7;
+// position relative to the tip of the sheath (0 = at tip, positive = above tip, negative = below tip) in mm
+ear_position = 0;
+// depth of the cylinder extrusion in mm
+ear_depth = 3;
 
 // add some cute eye holes 👀(these are for preventing rust)
 enable_eyes = true;
-eye_radius = ear_radius / 2; 
+eye_radius = 2; 
+// distance between the eyes in mm
+eye_distance = 10;
 // position of the eyes relative to the height of the sheath (0 at the bottom, 1 at the top)
 eye_position_ratio = 0.8;
 
@@ -119,28 +126,30 @@ module chisel_shape(
 
 // 🐻 Bear ears module
 module bear_ears() {
-    side_ears = ear_style == "side" ? true : false;
-    x_offset = side_ears ? (chisel_tip_thickness + sheath_wall_thickness*2)/2 : chisel_tip_thickness/2;
-    y_offset = side_ears ? (chisel_width + sheath_side_thickness*2) / 2 : chisel_width/3;
-    z_offset = side_ears ? (chisel_length * 9/10) : chisel_length + sheath_front_thickness;
-    x_scale = side_ears ? 1 : 0.8;
+    // Position ears at the tip of the sheath plus the specified offset
+    z_offset = chisel_length + sheath_front_thickness + ear_position;
+    // Center the ears horizontally on the sheath
+    x_offset = (very_tip_thickness_buffer + sheath_wall_thickness * 2) / 2;
+    // Position ears at half the distance from center
+    y_offset = ear_distance / 2;
+    
     union() {
         // Left ear
         translate([x_offset, -y_offset, z_offset])
-            scale([x_scale,1,1])
-                sphere(r = ear_radius, $fn = 64);
+            rotate([0, 90, 0])  // rotate to extrude in the thickness plane
+                cylinder(h = ear_depth, r = ear_width/2, center = true, $fn = 24);
         
         // Right ear
         translate([x_offset, y_offset, z_offset])
-            scale([x_scale,1,1])
-                sphere(r = ear_radius, $fn = 64);
+            rotate([0, 90, 0])  // rotate to extrude in the thickness plane
+                cylinder(h = ear_depth, r = ear_width/2, center = true, $fn = 24);
     }
 }
 
 // eyes module
 module eyes() {
     eye_length = chisel_tip_thickness + sheath_wall_thickness * 2 + 1;  // enough to cut through
-    eye_offset_y = (chisel_width/3) * 0.8;   // inward from ears
+    eye_offset_y = eye_distance / 2;   // half the distance for each eye
     eye_offset_z = (chisel_length + sheath_front_thickness) * eye_position_ratio;
     for (side = [-1, 1]) {
         translate([eye_length, side * eye_offset_y, eye_offset_z])

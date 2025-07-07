@@ -2,7 +2,7 @@
 // This tool has an opening on one side to allow insertion into tight spaces
 
 // Parameters
-hex_size = 15.875;    // Face to face distance of hex nut (5/8 inch = 15.875mm)
+hex_size = 16.5;
 wrench_depth = 8;     // Thickness of the working part of the wrench (mm)
 opening_size = 80;    // Angle to open up one side (degrees)
 wall_thickness = 7.5; // Wall thickness of the wrench body (mm)
