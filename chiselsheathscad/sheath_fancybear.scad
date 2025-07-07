@@ -41,9 +41,9 @@ enable_ears = true;
 // distance between the ears in mm
 ear_distance = 12;
 // height of the cylinder in the sheath length plane in mm
-ear_height = 5;
+ear_height = 2;
 // width of the cylinder in mm
-ear_width = 7;
+ear_width = 3;
 // position relative to the tip of the sheath (0 = at tip, positive = above tip, negative = below tip) in mm
 ear_position = 0;
 // depth of the cylinder extrusion in mm
@@ -51,7 +51,10 @@ ear_depth = 3;
 
 // add some cute eye holes 👀(these are for preventing rust)
 enable_eyes = true;
-eye_radius = 2; 
+// height of the eye cylinder in mm
+eye_height = 1.5;
+// width of the eye cylinder in mm
+eye_width = 1.7;
 // distance between the eyes in mm
 eye_distance = 10;
 // position of the eyes relative to the height of the sheath (0 at the bottom, 1 at the top)
@@ -61,8 +64,10 @@ eye_position_ratio = 0.8;
 
 // add the minimaple logo 吕 
 enable_logo = true;
+// scale factor for the logo (1.0 = original size)
+logo_scale = 0.8;
 // depth of emboss (engrave) in mm
-logo_depth = 1;            
+logo_depth = 0.8;            
 // "emboss" or "engrave"
 logo_style = "emboss"; 
 // "bevel" or "back"
@@ -137,24 +142,27 @@ module bear_ears() {
         // Left ear
         translate([x_offset, -y_offset, z_offset])
             rotate([0, 90, 0])  // rotate to extrude in the thickness plane
-                cylinder(h = ear_depth, r = ear_width/2, center = true, $fn = 24);
+                scale([ear_height, ear_width, ear_depth])
+                    cylinder(h = 1, r = 1, center = true, $fn = 24);
         
         // Right ear
         translate([x_offset, y_offset, z_offset])
             rotate([0, 90, 0])  // rotate to extrude in the thickness plane
-                cylinder(h = ear_depth, r = ear_width/2, center = true, $fn = 24);
+                scale([ear_height, ear_width, ear_depth])
+                    cylinder(h = 1, r = 1, center = true, $fn = 24);
     }
 }
 
 // eyes module
 module eyes() {
-    eye_length = chisel_tip_thickness + sheath_wall_thickness * 2 + 1;  // enough to cut through
+    eye_depth = chisel_tip_thickness + sheath_wall_thickness * 2 + 1;  // enough to cut through
     eye_offset_y = eye_distance / 2;   // half the distance for each eye
     eye_offset_z = (chisel_length + sheath_front_thickness) * eye_position_ratio;
     for (side = [-1, 1]) {
-        translate([eye_length, side * eye_offset_y, eye_offset_z])
+        translate([eye_depth, side * eye_offset_y, eye_offset_z])
             rotate([0, 90, 0])  // align along X-axis
-                cylinder(r = eye_radius, h = eye_length, center = true, $fn = 24);
+                scale([eye_height, eye_width, eye_depth])
+                    cylinder(h = 1, r = 1, center = true, $fn = 24);
     }
 }
 
@@ -174,9 +182,12 @@ module sheath_shape() {
                 );
                 sphere(r = minkowski_radius, $fn = 24);  // small sphere for smooth edges
             };
-            // 🐻 Only add bear ears if enabled
+            // 🐻 Only add bear ears if enabled (with separate minkowski)
             if (enable_ears) {
-                bear_ears();
+                minkowski() {
+                    bear_ears();
+                    sphere(r = minkowski_radius, $fn = 24);
+                }
             }
         }
         //
@@ -209,14 +220,16 @@ module logo() {
 
      minkowski() {
         rotate([90,0,0]) {
-            union() {
-                // Bottom box
-                translate([-logo_width/2, -logo_height/2, 0])
-                    cube([logo_width, logo_height, logo_depth+poop]);
-                
-                // Top box
-                translate([-logo_width*logo_top_scale/2, logo_height/2 + logo_spacing, 0])
-                    cube([logo_width*logo_top_scale, logo_height, logo_depth+poop]);
+            scale([logo_scale, logo_scale, 1]) {  // scale X and Y, keep Z (depth) unchanged
+                union() {
+                    // Bottom box
+                    translate([-logo_width/2, -logo_height/2, 0])
+                        cube([logo_width, logo_height, logo_depth+poop]);
+                    
+                    // Top box
+                    translate([-logo_width*logo_top_scale/2, logo_height/2 + logo_spacing, 0])
+                        cube([logo_width*logo_top_scale, logo_height, logo_depth+poop]);
+                }
             }
         };
         sphere(r = 0.2, $fn = 24); 
