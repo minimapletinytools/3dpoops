@@ -7,6 +7,8 @@ use <BOSL/threading.scad>
 // Parameters
 screw_diameter = 26; // Default 10mm, can be changed
 
+fdm_overextrusion_offset = 0.05; // increase holes dimensions by this amount to account for FDM overextrusion
+
 // Convert to inches for calculations (1 inch = 25.4 mm)
 screw_diameter_inch = screw_diameter / 25.4;
 
@@ -24,7 +26,7 @@ tpi = 6; // 6 threads per inch
 center_hole_diameter = 3/8 * 25.4; // 3/8 inch in mm
 side_hole_diameter = 7/32 * 25.4;  // 7/32 inch in mm
 side_hole_spacing = 1.375 * 25.4;  // 1 3/8 inches in mm
-side_hole_bore_diameter = 1/2 * 25.4; // 1/2 inch in mm
+side_hole_bore_diameter = 10;
 side_hole_non_bore_thickness = thread_z_padding/2;
 
 
@@ -48,7 +50,7 @@ module wood_threader() {
         {
             // Center hole (3/8" diameter, halfway down)
             translate([length/2, width/2, height/4])
-            cylinder(h = height/2 + poop, d = center_hole_diameter, center = true);
+            cylinder(h = height/2 + poop, d = center_hole_diameter + fdm_overextrusion_offset, center = true);
         }
         
         // Side holes (7/32" diameter, all the way through)
@@ -68,11 +70,13 @@ module wood_threader() {
         {
             translate([length/2, width/2 + poop, thread_z_location])
             rotate([90, 0, 0])
+            // this uses the default thread angle of 30 which matches the beall tap
             threaded_rod(
                 d = screw_diameter,
                 l = width + poop*2,
                 pitch = 25.4/tpi, // Convert TPI to pitch in mm
                 internal = true,
+                //bevel = true,
                 $fn=64
             );
         }
@@ -81,7 +85,14 @@ module wood_threader() {
         {
             translate([length/2, 0, thread_z_location])
             rotate([90, 0, 0])
-            cylinder(h = width, d = screw_diameter, center = true);
+            cylinder(h = width, d = screw_diameter + fdm_overextrusion_offset, center = true);
+        }
+
+        // now clean out the thread ends to fit the beall tap
+        {
+            translate([length/2, 0, thread_z_location])
+            rotate([90, 0, 0])
+            cylinder(h = width*2, d = screw_diameter - 1/8 * 25.4 + fdm_overextrusion_offset, center = true);
         }
     }
 }
