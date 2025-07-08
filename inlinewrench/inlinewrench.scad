@@ -2,17 +2,18 @@
 // This tool has an opening on one side to allow insertion into tight spaces
 
 // Parameters
-hex_size = 16.5;
+hex_size = 15.875;    // Face to face distance of hex nut (5/8 inch = 15.875mm)
 wrench_depth = 8;     // Thickness of the working part of the wrench (mm)
-opening_size = 80;    // Angle to open up one side (degrees)
-wall_thickness = 7.5; // Wall thickness of the wrench body (mm)
+opening_size = 120;    // Angle to open up one side (degrees)
+wall_thickness = 10; // Wall thickness of the wrench body (mm)
 
 // to deal with z fighting 
 poop = 0.1;
 
 // Main wrench body
 module hex_wrench(hex_size_param = hex_size) {
-    hex_radius_param = hex_size_param / 2;
+    // Convert face-to-face distance to radius (corner-to-corner = face-to-face * 2/sqrt(3))
+    hex_radius_param = hex_size_param * sqrt(3) / 4;
     outer_radius_param = hex_radius_param + wall_thickness;
     
     difference() {
@@ -38,7 +39,8 @@ module hex_wrench(hex_size_param = hex_size) {
 
 // Add grip pattern to the main wrench body
 module wrench_with_grip(hex_size_param = hex_size) {
-    hex_radius_param = hex_size_param / 2;
+    // Convert face-to-face distance to radius (corner-to-corner = face-to-face * 2/sqrt(3))
+    hex_radius_param = hex_size_param * sqrt(3) / 4;
     outer_radius_param = hex_radius_param + wall_thickness;
     
     union() {
@@ -46,8 +48,8 @@ module wrench_with_grip(hex_size_param = hex_size) {
         hex_wrench(hex_size_param);
         
         // Subtle grip pattern on the outer surface
-        for (i = [0:5]) {
-            angle = i * 60;
+        for (i = [0:10]) {
+            angle = i * 30;
             // Skip protrusions that would be in the opening cutout area
             if (angle < 360 - opening_size/2 && angle > opening_size/2) {
                 rotate([0, 0, angle])

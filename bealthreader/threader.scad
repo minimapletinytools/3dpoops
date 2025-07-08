@@ -5,18 +5,18 @@
 use <BOSL/threading.scad>
 
 // Parameters
-screw_diameter = 25.4; // Default 10mm, can be changed
+screw_diameter = 26; // Default 10mm, can be changed
 
 // Convert to inches for calculations (1 inch = 25.4 mm)
 screw_diameter_inch = screw_diameter / 25.4;
 
 // Main dimensions
-length = screw_diameter * 2;
-width = 2 * 25.4;  // screw goes in this direction
-height = (screw_diameter_inch + 0.5) * 25.4; // screw diameter + 1 inch in mm
+length = screw_diameter * 2.5;
+width = 3 * 25.4;  // screw goes in this direction
+height = (screw_diameter_inch + 0.75) * 25.4; // screw diameter + 1 inch in mm
 
 // Threading parameters
-thread_z_padding = 1/4 * 25.4; // 1/4 inch in mm
+thread_z_padding = 3/8 * 25.4; // 1/4 inch in mm
 thread_z_location = thread_z_padding + screw_diameter_inch/2 * 25.4; // 1/4" + screw radius in mm
 tpi = 6; // 6 threads per inch
 
