@@ -13,7 +13,7 @@ poop = 0.1;
 // Main wrench body
 module hex_wrench(hex_size_param = hex_size) {
     // Convert face-to-face distance to radius (corner-to-corner = face-to-face * 2/sqrt(3))
-    hex_radius_param = hex_size_param * sqrt(3) / 4;
+    hex_radius_param = hex_size_param * 1/sqrt(3);
     outer_radius_param = hex_radius_param + wall_thickness;
     
     difference() {
@@ -40,7 +40,7 @@ module hex_wrench(hex_size_param = hex_size) {
 // Add grip pattern to the main wrench body
 module wrench_with_grip(hex_size_param = hex_size) {
     // Convert face-to-face distance to radius (corner-to-corner = face-to-face * 2/sqrt(3))
-    hex_radius_param = hex_size_param * sqrt(3) / 4;
+    hex_radius_param = hex_size_param * 1/sqrt(3);
     outer_radius_param = hex_radius_param + wall_thickness;
     
     union() {
