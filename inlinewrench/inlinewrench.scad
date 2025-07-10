@@ -2,13 +2,32 @@
 // This tool has an opening on one side to allow insertion into tight spaces
 
 // Parameters
-hex_size = 15.875;    // Face to face distance of hex nut (5/8 inch = 15.875mm)
+hex_size = 17.5;    // Face to face distance of hex nut (5/8 inch = 15.875mm)
 wrench_depth = 8;     // Thickness of the working part of the wrench (mm)
 opening_size = 120;    // Angle to open up one side (degrees)
 wall_thickness = 10; // Wall thickness of the wrench body (mm)
+label_text = "11/16";        // Text to emboss on the top of the wrench
+extrude_depth = 2;
+
 
 // to deal with z fighting 
 poop = 0.1;
+
+// Text embossing module
+module engrave_text(text_param = label_text, hex_size_param = hex_size) {
+    hex_radius_param = hex_size_param * 1/sqrt(3);
+    outer_radius_param = hex_radius_param + wall_thickness;
+    
+    // Position text at the top of the wrench with translation and rotation
+    translate([-(hex_radius_param + outer_radius_param)/2, 0, wrench_depth - 0.5])
+    rotate([0, 0, 90])
+    linear_extrude(height = extrude_depth)
+    text(text_param, 
+         size = min(outer_radius_param * 0.3, 4), 
+         halign = "center", 
+         valign = "center",
+         $fn = 20);
+}
 
 // Main wrench body
 module hex_wrench(hex_size_param = hex_size) {
@@ -60,8 +79,19 @@ module wrench_with_grip(hex_size_param = hex_size) {
     }
 }
 
+// Complete wrench with text embossing
+module complete_wrench(hex_size_param = hex_size, text_param = label_text) {
+    difference() {
+        // Wrench with grip
+        wrench_with_grip(hex_size_param);
+        
+        // Emboss text on top
+        engrave_text(text_param, hex_size_param);
+    }
+}
+
 // Render the complete wrench
-wrench_with_grip(hex_size);
+complete_wrench(hex_size, label_text);
 
 // Echo parameters for verification
 echo("Hex Wrench Parameters:");
@@ -69,3 +99,4 @@ echo("Hex size (face to face):", hex_size, "mm");
 echo("Wrench depth:", wrench_depth, "mm");
 echo("Opening angle:", opening_size, "degrees");
 echo("Wall thickness:", wall_thickness, "mm");
+echo("Label text:", label_text);

@@ -5,7 +5,7 @@
 use <BOSL/threading.scad>
 
 // Parameters
-screw_diameter = 26; // Default 10mm, can be changed
+screw_diameter = 26.5; // Default 10mm, can be changed
 
 fdm_overextrusion_offset = 0.05; // increase holes dimensions by this amount to account for FDM overextrusion
 
@@ -14,7 +14,7 @@ screw_diameter_inch = screw_diameter / 25.4;
 
 // Main dimensions
 length = screw_diameter * 2.5;
-width = 3 * 25.4;  // screw goes in this direction
+width = 2.5 * 25.4;  // screw goes in this direction
 height = (screw_diameter_inch + 0.75) * 25.4; // screw diameter + 1 inch in mm
 
 // Threading parameters
