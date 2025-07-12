@@ -34,11 +34,13 @@ poop = 0.1;
 
 module router_block() {
     difference() {
-        // Main block
-        cube([block_width, block_height, block_thickness]);
+        // Main block - centered at origin
+        translate([-block_width/2, -block_height/2, 0]) {
+            cube([block_width, block_height, block_thickness]);
+        }
         
         // Threaded hole in center using BOSL2
-        translate([block_width/2, block_height/2, -poop]) {
+        translate([0, 0, -poop]) {
             threaded_rod(
                 d = threaded_hole_diameter,
                 l = block_thickness + 2*poop,
@@ -50,17 +52,17 @@ module router_block() {
             );
         }
         
-        // Mounting holes for router base
-        translate([mount_hole_offset, mount_hole_offset, -poop]) {
+        // Mounting holes for router base - positioned relative to center
+        translate([-block_width/2 + mount_hole_offset, -block_height/2 + mount_hole_offset, -poop]) {
             cylinder(h = block_thickness + 2*poop, d = mount_hole_diameter);
         }
-        translate([block_width - mount_hole_offset, mount_hole_offset, -poop]) {
+        translate([block_width/2 - mount_hole_offset, -block_height/2 + mount_hole_offset, -poop]) {
             cylinder(h = block_thickness + 2*poop, d = mount_hole_diameter);
         }
-        translate([mount_hole_offset, block_height - mount_hole_offset, -poop]) {
+        translate([-block_width/2 + mount_hole_offset, block_height/2 - mount_hole_offset, -poop]) {
             cylinder(h = block_thickness + 2*poop, d = mount_hole_diameter);
         }
-        translate([block_width - mount_hole_offset, block_height - mount_hole_offset, -poop]) {
+        translate([block_width/2 - mount_hole_offset, block_height/2 - mount_hole_offset, -poop]) {
             cylinder(h = block_thickness + 2*poop, d = mount_hole_diameter);
         }
     }
