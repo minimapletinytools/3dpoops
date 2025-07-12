@@ -1,33 +1,39 @@
-// Wood Threading Tool
-// Parameter: screw diameter
-// Uses BOSL library for threading
+// replacement threader block for the beall threader
+// this design prints the block larger than the beall delrin blocks and does not fit with the wood board that comes with the threader
+// it is not necessary, just clamp directly to the block
 
 use <BOSL/threading.scad>
 
-// Parameters
-screw_diameter = 26.5; // Default 10mm, can be changed
-
-fdm_overextrusion_offset = 0.05; // increase holes dimensions by this amount to account for FDM overextrusion
+// primary screw parameters
+// screw diameter, you may want to make this slightly larger than the nominal size of the rod.
+screw_diameter = 26.5; 
+// threads per inch (6 to match the beall threader)
+tpi = 6; 
 
 // Convert to inches for calculations (1 inch = 25.4 mm)
 screw_diameter_inch = screw_diameter / 25.4;
 
 // Main dimensions
+// screw goes in this direction, make this longer for more support I guess. 2.5 seems fine.
+width = 2.5 * 25.4;  
+// length of the threading block
 length = screw_diameter * 2.5;
-width = 2.5 * 25.4;  // screw goes in this direction
-height = (screw_diameter_inch + 0.75) * 25.4; // screw diameter + 1 inch in mm
+// height of the threading block
+height = (screw_diameter_inch + 0.75) * 25.4;
 
-// Threading parameters
+// center hole location parameters
 thread_z_padding = 3/8 * 25.4; // 1/4 inch in mm
 thread_z_location = thread_z_padding + screw_diameter_inch/2 * 25.4; // 1/4" + screw radius in mm
-tpi = 6; // 6 threads per inch
 
-// alignment and screw hole dimensions
+// alignment and screw hole dimensions (these are the same as the beall threader)
 center_hole_diameter = 3/8 * 25.4; // 3/8 inch in mm
 side_hole_diameter = 7/32 * 25.4;  // 7/32 inch in mm
 side_hole_spacing = 1.375 * 25.4;  // 1 3/8 inches in mm
 side_hole_bore_diameter = 10;
 side_hole_non_bore_thickness = thread_z_padding/2;
+
+// increase mounting hole dimensions by this amount to account for FDM overextrusion
+fdm_overextrusion_offset = 0.05; 
 
 
 
@@ -85,14 +91,14 @@ module wood_threader() {
         {
             translate([length/2, 0, thread_z_location])
             rotate([90, 0, 0])
-            cylinder(h = width, d = screw_diameter + fdm_overextrusion_offset, center = true);
+            cylinder(h = width, d = screw_diameter, center = true);
         }
 
-        // now clean out the thread ends to fit the beall tap
+        // now clean out the pointy thread ends to match the beall tap
         {
             translate([length/2, 0, thread_z_location])
             rotate([90, 0, 0])
-            cylinder(h = width*2, d = screw_diameter - 1/8 * 25.4 + fdm_overextrusion_offset, center = true);
+            cylinder(h = width*2, d = screw_diameter - 1/8 * 25.4, center = true);
         }
     }
 }
