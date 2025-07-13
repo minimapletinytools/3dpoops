@@ -1,21 +1,10 @@
 // Chisel Sheath by 吕 minimaple 
-// CHISEL PARAMETERS
-// width of chisel in mm
-chisel_width = 19;
 
-// thickness of chisel right where the bevel starts in mm
-chisel_tip_thickness = 4.9;
-
-// thickness of chisel at end of sheath in mm
-chisel_end_thickness = 6.5;
-
-// The length of the bevel (tapering to 0mm). You can set this to 0 if you don't want the chisel shape in the mortise.
-chisel_bevel_length = 5;
-
-
-// SHEATH PARAMETERS
-// length of the chisel (measured from the tip) you want inside the sheath in mm
-chisel_length = 62;
+chisel_width = 106;
+chisel_tip_thickness = 6;
+chisel_end_thickness = 8;
+chisel_bevel_length = 13;
+chisel_length = 42;
 
 // wall thickness (top/bottom) in mm
 sheath_wall_thickness = 2;
@@ -39,11 +28,11 @@ very_tip_thickness_buffer = 1;
 enable_ears = true;
 
 // distance between the ears in mm
-ear_distance = 12;
+ear_distance = 50;
 // height of the cylinder in the sheath length plane in mm
-ear_height = 2;
+ear_height = 3;
 // width of the cylinder in mm
-ear_width = 3;
+ear_width = 6;
 // position relative to the tip of the sheath (0 = at tip, positive = above tip, negative = below tip) in mm
 ear_position = 0;
 // depth of the cylinder extrusion in mm
@@ -56,7 +45,7 @@ eye_height = 1.5;
 // width of the eye cylinder in mm
 eye_width = 1.7;
 // distance between the eyes in mm
-eye_distance = 10;
+eye_distance = 30;
 // position of the eyes relative to the height of the sheath (0 at the bottom, 1 at the top)
 eye_position_ratio = 0.8;
 

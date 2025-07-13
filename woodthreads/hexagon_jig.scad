@@ -16,7 +16,7 @@ recess_depth = 3;
 
 
 // Calculated dimensions
-jig_width = outer_diameter + 25; // Width of the jig base
+jig_width = outer_diameter + 35; // Width of the jig base
 jig_length = 250; // Length of the jig base
 dowel_offset_from_top = 50; // 3 inches in mm
 dowel_offset_from_left = outer_diameter / 2; // Center of hexagon from left edge
@@ -54,6 +54,7 @@ module hexagon_jig() {
         */
 
         // create recess for second fence
+        /*
         translate([dowel_offset_from_top, dowel_offset_from_left, jig_thickness-recess_depth])
             rotate([0, 0, 60])
                 // now translate at a -120 degree angle by corner_to_corner/2
@@ -61,6 +62,7 @@ module hexagon_jig() {
                     rotate([0, 0, -120])
                         translate([-jig_width, 0, 0])
                             cube([jig_width*2, fence_thickness, recess_depth+poop]);
+        */
 
     }
 
@@ -90,6 +92,7 @@ module hexagon_jig() {
                             cube([jig_width*2, fence_thickness, dowel_height+jig_thickness]);
 
             //second fence
+            /*
             translate([dowel_offset_from_top, dowel_offset_from_left, jig_thickness-recess_depth])
                 rotate([0, 0, 60])
                     // now translate at a -120 degree angle by corner_to_corner/2
@@ -97,7 +100,7 @@ module hexagon_jig() {
                         rotate([0, 0, -120])
                             translate([-jig_width, 0, 0])
                                 cube([jig_width*2, fence_thickness, dowel_height+recess_depth]);
-            
+            */
         }
         
 
@@ -114,8 +117,8 @@ module hexagon_jig() {
     }
 
     // expand the platform for safety
-    translate([jig_length/2 ,-jig_width,-poop])
-        cube([jig_length/2, jig_width, jig_thickness]);
+    translate([jig_length/3 ,-jig_width*1.3,-poop])
+        cube([jig_length*2/3, jig_width*1.3, jig_thickness]);
 
 }
 // Render the jig

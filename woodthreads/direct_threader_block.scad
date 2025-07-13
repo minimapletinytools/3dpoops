@@ -4,7 +4,7 @@ use <BOSL/threading.scad>
 
 // primary screw parameters
 // screw diameter, you may want to make this slightly larger than the nominal size of the rod.
-screw_diameter = 26; 
+screw_diameter = 26.4; 
 // threads per inch (6 to match the beall threader)
 tpi = 6; 
 
@@ -25,8 +25,8 @@ thread_z_location = thread_z_padding + screw_diameter_inch/2 * 25.4; // 1/4" + s
 
 // mounting plate dimensions
 mounting_plate_thickness = 10;
-mounting_plate_width = 100;
-mounting_plate_length = 100;
+mounting_plate_width = 120;
+mounting_plate_length = 120;
 
 // alignment and screw hole dimensions
 center_hole_diameter = 3/8 * 25.4; // 3/8 inch in mm
@@ -61,7 +61,13 @@ module wood_threader() {
             sphere(r = chamfer_radius, $fn = 32);
         }
 
-        // TODO add mounting holes
+        // mounting holes for direct tapping M5 screws spaced 100mm apart (adjust this to fit your router)
+        for (i = [-1, 1]) {
+            for (j = [-1, 1]) {
+                translate([i * 50, j * 50, 0])
+                    cylinder(h = 100, d = 4.8, center = true);
+            }
+        }
     
         {
             // Center hole (3/8" diameter, halfway down)
@@ -74,7 +80,8 @@ module wood_threader() {
         {
             translate([0, 0, thread_z_location - height/2])
             rotate([90, 0, 0])
-            // the threaded rod will line up exactly with the center hole with the default orientation of the threaded rod
+            // rotate the rod so that the threads line up with the center hole (this sometimes seems inconsistent and I'm not sure why, you may need to delete this)
+            rotate([0, 0, 180])
             // this uses the default thread angle of 30 which matches the beall tap
             threaded_rod(
                 d = screw_diameter,
