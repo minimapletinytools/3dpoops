@@ -28,3 +28,12 @@ chisel_tip_thickness = 2.40;
 chisel_end_thickness = 4.35;
 chisel_bevel_length = 0;
 chisel_length = 75;
+
+
+//BIG CHISEL
+
+chisel_width = 106;
+chisel_tip_thickness = 6;
+chisel_end_thickness = 8;
+chisel_bevel_length = 13;
+chisel_length = 42;

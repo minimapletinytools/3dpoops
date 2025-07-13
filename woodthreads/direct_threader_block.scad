@@ -4,7 +4,7 @@ use <BOSL/threading.scad>
 
 // primary screw parameters
 // screw diameter, you may want to make this slightly larger than the nominal size of the rod.
-screw_diameter = 26.5; 
+screw_diameter = 26; 
 // threads per inch (6 to match the beall threader)
 tpi = 6; 
 
@@ -74,6 +74,7 @@ module wood_threader() {
         {
             translate([0, 0, thread_z_location - height/2])
             rotate([90, 0, 0])
+            // the threaded rod will line up exactly with the center hole with the default orientation of the threaded rod
             // this uses the default thread angle of 30 which matches the beall tap
             threaded_rod(
                 d = screw_diameter,
