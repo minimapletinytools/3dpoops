@@ -13,18 +13,21 @@ block_diameter = 150;           // Diameter of the cylindrical block
 threaded_hole_diameter = 110;    // Diameter of the threaded hole
 thread_tpi = 6;                 // Threads per inch
 
-max_threading_length = block_thickness*6/7;
-
 // Router mounting parameters
 mount_hole_diameter = 4;        // Diameter of mounting holes
 mount_hole_distance = 130;      // Distance from center to each mounting hole
 support_disk_diameter = 40;     // Diameter of support disks around mounting holes
 support_disk_height = block_thickness;
 
+// Router mounting plate parameters
+// TODO
+
+
 // Minkowski parameters
 minkowski_radius = 1;           // Radius for Minkowski operation
 
 // Hexagon screw parameters
+max_threading_length = block_thickness*6/7;
 screw_length = block_thickness*5/3;             // Total length of the screw
 hex_cutout_length = max_threading_length+3;
 hex_face_to_face = 50.8;         // Face-to-face distance of the hexagon (make this ever so slightly smaller than the hex nut)
