@@ -1,31 +1,41 @@
 from codetocad import *
 
-Scene().set_default_unit("in")
-
 # Create the rectangular base
-# Dimensions: 4" x 6" x 0.5" thick
+# Dimensions: 101.6mm x 203.2mm x 12.7mm thick
 base = Part("base")
-base.create_cube(4, 8, 0.5)
-base.translate_y(1.5)
+base.create_cube(101.6, 203.2, 12.7)
+base.translate_y(38.1)
 
-# Create the hole
-# Hole diameter: 3 3/32 inches (3.09375 inches)
-# Position: centered in 4" dimension, 1" from side in 6" dimension
+# Create landmarks for hole positioning
+base.create_landmark("main_hole_center", 0, 0, 0)  # Center of base
+base.create_landmark("mounting_hole1", -15.24, 53.34, 0)  # Left mounting hole
+base.create_landmark("mounting_hole2", 15.24, 53.34, 0)   # Right mounting hole
+
+# Get landmark positions
+main_hole_landmark = base.get_landmark("main_hole_center")
+mounting_hole1_landmark = base.get_landmark("mounting_hole1")
+mounting_hole2_landmark = base.get_landmark("mounting_hole2")
+
+# Get landmark world positions
+main_hole_pos = main_hole_landmark.get_location_world()
+mounting_hole1_pos = mounting_hole1_landmark.get_location_world()
+mounting_hole2_pos = mounting_hole2_landmark.get_location_world()
+
+# Create the main hole
+# Hole diameter: 78.58mm (3.09375 inches)
 hole = Part("hole")
-hole.create_cylinder(3.09375/2, 0.5)  # radius = diameter/2, height = base thickness
-
+hole.create_cylinder(39.29, 12.7)  # radius = diameter/2, height = base thickness
+hole.translate_xyz(main_hole_pos.x, main_hole_pos.y, main_hole_pos.z)
 
 # Create two mounting holes on the +y side
-# 1.2 inches apart in X, 2.1 inches in Y from the main hole
+# 30.48mm apart in X, 53.34mm in Y from the main hole
 mounting_hole1 = Part("mounting_hole1")
-mounting_hole1.create_cylinder(0.125, 0.5)  # 1/4 inch diameter hole
-mounting_hole1.translate_x(-0.6)  # 0.6 inches to the left (1.2 inches apart = 0.6 inches each side)
-mounting_hole1.translate_y(2.1)  # 2.1 inches in +y direction
+mounting_hole1.create_cylinder(3.175, 12.7)  # 6.35mm diameter hole
+mounting_hole1.translate_xyz(mounting_hole1_pos.x, mounting_hole1_pos.y, mounting_hole1_pos.z)
 
 mounting_hole2 = Part("mounting_hole2")
-mounting_hole2.create_cylinder(0.125, 0.5)  # 1/4 inch diameter hole
-mounting_hole2.translate_x(0.6)   # 0.6 inches to the right (1.2 inches apart = 0.6 inches each side)
-mounting_hole2.translate_y(2.1)  # 2.1 inches in +y direction
+mounting_hole2.create_cylinder(3.175, 12.7)  # 6.35mm diameter hole
+mounting_hole2.translate_xyz(mounting_hole2_pos.x, mounting_hole2_pos.y, mounting_hole2_pos.z)
 
 # Subtract all holes from the base
 base.subtract(hole)
@@ -34,3 +44,4 @@ base.subtract(mounting_hole2)
 
 # Export the result
 base.export("locline_tablemount.stl")
+

@@ -4,7 +4,7 @@ use <BOSL/threading.scad>
 
 // primary screw parameters
 // screw diameter, you may want to make this slightly larger than the nominal size of the rod.
-screw_diameter = 26.4; 
+screw_diameter = 26; 
 // threads per inch (6 to match the beall threader)
 tpi = 6; 
 
@@ -101,11 +101,12 @@ module wood_threader() {
         }
 
         // now clean out the pointy thread ends to match the beall tap
+        /*
         {
             translate([0, mounting_plate_width/2, thread_z_location - height/2])
             rotate([90, 0, 0])
             cylinder(h = mounting_plate_width, d = screw_diameter - 1/8 * 25.4, center = true);
-        }
+        }*/
     }
 }
 

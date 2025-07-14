@@ -4,10 +4,10 @@
 // ===== PARAMETERS =====
 
 // Top section parameters
-top_taper_diameter_tip = 30;     // Diameter at the tip of top section
-top_taper_diameter_end = 35;     // Diameter at the end of top section
+top_taper_diameter_tip = 63.5;     // Diameter at the tip of top section
+top_taper_diameter_end = 63;     // Diameter at the end of top section
 top_length = 30;                 // Length of top section
-top_is_inside_fitting = false;    // If true, taper inside (reducing), else outside (increasing)
+top_is_inside_fitting = true;    // If true, then inner diammeter + taper inside (reducing), else outside (increasing)
 top_wall_thickness = 2;          // Wall thickness for top section
 
 // Bottom section parameters
