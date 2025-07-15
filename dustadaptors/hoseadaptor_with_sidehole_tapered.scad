@@ -6,26 +6,26 @@
 // Top section parameters
 top_taper_diameter_tip = 63.5;     // Diameter at the tip of top section
 top_taper_diameter_end = 63;     // Diameter at the end of top section
-top_length = 30;                 // Length of top section
-top_is_inside_fitting = true;    // If true, then inner diammeter + taper inside (reducing), else outside (increasing)
+top_length = 40;                 // Length of top section
+top_is_inside_fitting = true;    // If true, then diameter is inner diameter + taper inside (reducing); else diameter is outer diameter + taper outside (increasing)
 top_wall_thickness = 2;          // Wall thickness for top section
 
 // Bottom section parameters
-bot_taper_diameter_tip = 35;     // Diameter at the tip of bottom section (connects to mid section)
-bot_taper_diameter_end = 30;     // Diameter at the end of bottom section (free end)
-bot_length = 25;                 // Length of bottom section
-bot_is_inside_fitting = true;    // If true, taper inside (reducing), else outside (increasing)
+bot_taper_diameter_tip = 105.4;     // Diameter at the tip of bottom section (connects to mid section)
+bot_taper_diameter_end = 105.5;     // Diameter at the end of bottom section (free end)
+bot_length = 40;                 // Length of bottom section
+bot_is_inside_fitting = false;    // If true, taper inside (reducing), else outside (increasing)
 bot_wall_thickness = 2;          // Wall thickness for bottom section
 
 // Mid section parameters
-mid_length = 20;                 // Length of conical mid section
+mid_length = 40;                 // Length of conical mid section
 
 // Side port parameters
-side_taper_diameter_tip = 25;    // Diameter at the tip of side port
-side_taper_diameter_end = 20;    // Diameter at the end of side port
-side_length = 45;                // Length of side port
-side_angle = 45;                 // Angle at which side port sticks out (degrees)
-side_is_inside_fitting = true;   // If true, taper inside (reducing), else outside (increasing)
+side_taper_diameter_tip = 37;    // Diameter at the tip of side port
+side_taper_diameter_end = 38;    // Diameter at the end of side port
+side_length = 70;                // Length of side port
+side_angle = -45;                 // Angle at which side port sticks out (degrees)
+side_is_inside_fitting = false;   // If true, taper inside (reducing), else outside (increasing)
 side_wall_thickness = 2;         // Wall thickness for side port
 
 // General parameters

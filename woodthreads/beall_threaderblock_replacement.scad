@@ -54,7 +54,7 @@ module wood_threader() {
         {
             // Center hole (3/8" diameter, halfway down)
             translate([0, 0, -height/4])
-            cylinder(h = height/2 + poop, d = center_hole_diameter + fdm_overextrusion_offset, center = true);
+            cylinder(h = height/2 + poop, d = center_hole_diameter, center = true);
         }
         
         // Side holes (7/32" diameter, all the way through)
@@ -74,14 +74,14 @@ module wood_threader() {
         {
             translate([0, 0, 0])
             rotate([90, 0, 0])
-            // rotate the rod so that the threads line up with the center hole
-            rotate([0, 0, 180])
             // this uses the default thread angle of 30 which matches the beall tap
             threaded_rod(
                 d = screw_diameter,
                 l = width + poop*2,
                 pitch = 25.4/tpi, // Convert TPI to pitch in mm
                 internal = true,
+                // the center of the thread starts on the +x axis in the center of therod so we need to rotate by 90 degrees for alignment
+                spin = 90,
                 //bevel = true,
                 $fn=64
             );

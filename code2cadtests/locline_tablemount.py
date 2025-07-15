@@ -8,8 +8,8 @@ base.translate_y(38.1)
 
 # Create landmarks for hole positioning
 base.create_landmark("main_hole_center", 0, 0, 0)  # Center of base
-base.create_landmark("mounting_hole1", -15.24, 53.34, 0)  # Left mounting hole
-base.create_landmark("mounting_hole2", 15.24, 53.34, 0)   # Right mounting hole
+base.create_landmark("mounting_hole1", -16, 55, 0)  # Left mounting hole
+base.create_landmark("mounting_hole2", 16, 55, 0)   # Right mounting hole
 
 # Get landmark positions
 main_hole_landmark = base.get_landmark("main_hole_center")

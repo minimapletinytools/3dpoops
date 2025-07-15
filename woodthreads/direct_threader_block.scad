@@ -80,8 +80,8 @@ module wood_threader() {
         {
             translate([0, 0, thread_z_location - height/2])
             rotate([90, 0, 0])
-            // rotate the rod so that the threads line up with the center hole (this sometimes seems inconsistent and I'm not sure why, you may need to delete this)
-            rotate([0, 0, 180])
+            // the center of the thread starts on the +x axis in the center of therod so we need to rotate by 90 degrees for alignment
+            rotate([0, 0, 90])
             // this uses the default thread angle of 30 which matches the beall tap
             threaded_rod(
                 d = screw_diameter,
@@ -93,12 +93,27 @@ module wood_threader() {
             );
         }
 
-        // we actually only want half the hole threaded, cut out the threads from the other half with a screw_diameter cylinder
+        // we actually only want half the hole threaded, cut out the threads from the other half with a screw_diameter cylinder with some awkward cutouts
         {
-            translate([0, mounting_plate_width/2, thread_z_location - height/2])
-            rotate([90, 0, 0])
-            cylinder(h = mounting_plate_width, d = screw_diameter, center = true);
+            //translate([0, mounting_plate_width/2 + 25.4/tpi/2, thread_z_location - height/2])
+            difference()
+            {
+                
+                // make the cylinder go 1/4 of a tooth past the center
+                overstep = 25.4/tpi*1/4;
+                translate([0, mounting_plate_width/2 - overstep, thread_z_location - height/2])
+                    rotate([90, 0, 0])
+                        cylinder(h = mounting_plate_width, d = screw_diameter, center = true);
+
+                // now chop off the bottom corner of the cylinder so that the threads reach the hole
+                translate([screw_diameter/2, -overstep*4/3, -screw_diameter/2])
+                   cube([screw_diameter, overstep*8/3, screw_diameter], center = true);
+            }
         }
+
+        // cut off the top so we can see what's going on
+        //translate([0, 0, height])
+        //    cube([100, 100, 100], center = true);
 
         // now clean out the pointy thread ends to match the beall tap
         /*
@@ -112,3 +127,4 @@ module wood_threader() {
 
 // Generate the model
 wood_threader();
+
