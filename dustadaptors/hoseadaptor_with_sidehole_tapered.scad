@@ -1,41 +1,51 @@
-// Parametric Dust Hose Adapter with Tapered Fittings
-// Creates a dust hose adapter
+// Parametric Dust Hose Adapter with Tapered Fittings 🛠️
+// Creates a dust hose adapter with tapered sections and conical transition
+// 吕 minimaple 
 
 // ===== PARAMETERS =====
 
 // Top section parameters
-// Diameter at the tip of top section (the part that sticks out)
+// Diameter at the tip of top section
 top_taper_diameter_tip = 63.5;     
-// Diameter at the base of top section (the part that connects to the mid section)
+// Diameter at the base of top section
 top_taper_diameter_base = 63;     
 // Length of top section
 top_length = 50;                 
-// set to true if this is an outter fitting, false for inner fitting. If outer fitting then diameter is inner diameter + taper inside (reducing). Otherwise diameter is outer diameter + taper outside (increasing)
+// Set to true if this is an outer fitting, false for inner fitting. If outer fitting then diameter is inner diameter + taper inside (reducing). Otherwise diameter is outer diameter + taper outside (increasing)
 top_is_outer_fitting = true;    
 // Wall thickness for top section
 top_wall_thickness = 3;          
 
 // Bottom section parameters
+// Diameter at the tip of bottom section (connects to mid section)
 bot_taper_diameter_tip = 106;     
+// Diameter at the base of bottom section (free end)
 bot_taper_diameter_base = 106;     
+// Length of bottom section
 bot_length = 50;                 
+// Set to true if this is an outer fitting, false for inner fitting
 bot_is_outer_fitting = false;    
+// Wall thickness for bottom section
 bot_wall_thickness = 3;          
 
 // Length of conical mid section connecting top and bottom sections
 mid_length = 40;                 
 
 // Side port parameters
+// Diameter at the tip of side port
 side_taper_diameter_tip = 38;    
+// Diameter at the base of side port
 side_taper_diameter_base = 39;   
 // Length of side port, make this a little longer than you need as part of it is sticking into the mid section
 side_length = 70;                
 // Angle at which side port sticks out (degrees)
 side_angle = -45;                 
+// Set to true if this is an outer fitting, false for inner fitting
 side_is_outer_fitting = false; 
+// Wall thickness for side port
 side_wall_thickness = 3;         
 
-// account for OpenSCAD Z fighting issues, do not change
+// Account for OpenSCAD Z fighting issues, do not change
 poop = 0.1;                     
 
 // ===== HELPER FUNCTIONS =====
