@@ -77,6 +77,7 @@ module wood_threader() {
 
 
         // Threaded hole using BOSL library
+        // the reason we don't start the thread in the middle of the block is so that we can consistently align the start of the threads with the center of the hole (threads grow out from the middle in bosl library)
         {
             translate([0, 0, thread_z_location - height/2])
             rotate([90, 0, 0])
