@@ -74,6 +74,8 @@ module wood_threader() {
         {
             translate([0, 0, 0])
             rotate([90, 0, 0])
+            // the center of the thread starts on the +x axis in the center of therod so we need to rotate by 90 degrees for alignment
+            rotate([0, 0, 90])
             // this uses the default thread angle of 30 which matches the beall tap
             threaded_rod(
                 d = screw_diameter,
@@ -81,17 +83,26 @@ module wood_threader() {
                 pitch = 25.4/tpi, // Convert TPI to pitch in mm
                 internal = true,
                 // the center of the thread starts on the +x axis in the center of therod so we need to rotate by 90 degrees for alignment
-                spin = 90,
                 //bevel = true,
                 $fn=64
             );
         }
 
-        // we actually only want half the hole threaded, cut out the threads from the other half with a screw_diameter cylinder
+        // we actually only want half the hole threaded, cut out the threads from the other half with a screw_diameter cylinder with some awkward cutouts
         {
-            translate([0, -width/2, 0])
-            rotate([90, 0, 0])
-            cylinder(h = width, d = screw_diameter, center = true);
+            difference()
+            {
+                
+                // make the cylinder go 1/4 of a tooth past the center
+                overstep = 25.4/tpi*1/4;
+                translate([0, width/2 - overstep, 0])
+                    rotate([90, 0, 0])
+                        cylinder(h = width, d = screw_diameter, center = true);
+
+                // now chop off the bottom corner of the cylinder so that the threads reach the hole
+                translate([screw_diameter/2, -overstep*4/3, -screw_diameter/2])
+                   cube([screw_diameter, overstep*8/3, screw_diameter], center = true);
+            }
         }
 
         // now clean out the pointy thread ends to match the beall tap
@@ -100,6 +111,10 @@ module wood_threader() {
             rotate([90, 0, 0])
             cylinder(h = width*2, d = screw_diameter - 1/8 * 25.4, center = true);
         }
+
+        // cut off the top so we can see what's going on
+        translate([0, 0, height])
+            cube([100, 100, 100], center = true);
     }
 }
 
