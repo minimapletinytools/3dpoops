@@ -94,10 +94,10 @@ module hexagon_holder_jig() {
 module insets()
 {
 
-    cylinder(h = dowel_height, d = inner_hole_diameter, $fn = 50);
+    cylinder(h = dowel_height*2, d = inner_hole_diameter, $fn = 50);
 
     translate([0, 20, 0])
-        cube([130, 10, dowel_height]);
+        cube([130, 10, dowel_height*2]);
 
 }
 

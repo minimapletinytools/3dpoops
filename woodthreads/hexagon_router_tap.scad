@@ -1,5 +1,4 @@
-// Wooden Thread Router Jig
-// Creates a jig for making wooden threads with a 1/4 palm router
+// jig for cutting inside threads on a hexagon nut with a router
 
 // Include BOSL2 library for threads
 include <BOSL2/std.scad>

@@ -4,7 +4,7 @@ use <BOSL/threading.scad>
 
 // primary screw parameters
 // screw diameter, you may want to make this slightly larger than the nominal size of the rod.
-screw_diameter = 26; 
+screw_diameter = 19.2; 
 // threads per inch (6 to match the beall threader)
 tpi = 6; 
 
