@@ -45,19 +45,58 @@ side_is_outer_fitting = false;
 // Wall thickness for side port
 side_wall_thickness = 3;         
 
+// Cylinder resolution (number of facets)
+cylinder_resolution = 64;        
+
+// add the minimaple logo 吕 
+enable_logo = true;
+// scale factor for the logo (1.0 = original size)
+logo_scale = 1;
+// depth of emboss (engrave) in mm
+logo_depth = 1;    
+
 // Account for OpenSCAD Z fighting issues, do not change
 poop = 0.1;                     
 
+
 // ===== HELPER FUNCTIONS =====
+
+
+// Engrave the 吕 logo on the front face
+module logo() {
+    logo_width = 7;           // Width of the bottom box
+    logo_height = 4;           // Height of the bottom box
+    logo_top_scale = 0.8;      // Ratio of top box width to bottom box
+    logo_spacing = 1.5;          // Vertical gap between the two boxes
+
+     minkowski() {
+        rotate([90,0,0]) {
+            scale([logo_scale, logo_scale, 1]) {  // scale X and Y, keep Z (depth) unchanged
+                union() {
+                    // Bottom box
+                    translate([-logo_width/2, -logo_height/2, 0])
+                        cube([logo_width, logo_height, logo_depth+poop]);
+                    
+                    // Top box
+                    translate([-logo_width*logo_top_scale/2, logo_height/2 + logo_spacing, 0])
+                        cube([logo_width*logo_top_scale, logo_height, logo_depth+poop]);
+                }
+            }
+        };
+        sphere(r = 0.2, $fn = 24); 
+    }
+    
+}
+
 
 // Generate the additive geometry (outer shell) for tapered cylinder
 module tapered_cylinder_additive(length, diameter_A, diameter_B, wall_thickness, is_outer_fitting) {
     if (is_outer_fitting) {
         // Diameters are inside diameters, so add wall thickness for outer shell
-        cylinder(h = length, d1 = diameter_A + 2*wall_thickness, d2 = diameter_B + 2*wall_thickness, center = false);
+        cylinder(h = length, d1 = diameter_A + 2*wall_thickness, d2 = diameter_B + 2*wall_thickness, center = false, $fn = cylinder_resolution);
     } else {
         // Diameters are outside diameters, so use as-is for outer shell
-        cylinder(h = length, d1 = diameter_A, d2 = diameter_B, center = false);
+        cylinder(h = length, d1 = diameter_A, d2 = diameter_B, center = false, $fn = cylinder_resolution);
     }
 }
 
@@ -66,12 +105,12 @@ module tapered_cylinder_subtractive(length, diameter_A, diameter_B, wall_thickne
     if (is_outer_fitting) {
         // Diameters are inside diameters, so use as-is for inner bore
         translate([0, 0, -poop]) {
-            cylinder(h = length + poop*2, d1 = diameter_A, d2 = diameter_B, center = false);
+            cylinder(h = length + poop*2, d1 = diameter_A, d2 = diameter_B, center = false, $fn = cylinder_resolution);
         }
     } else {
         // Diameters are outside diameters, so subtract wall thickness for inner bore
         translate([0, 0, -poop]) {
-            cylinder(h = length + poop*2, d1 = diameter_A - 2*wall_thickness, d2 = diameter_B - 2*wall_thickness, center = false);
+            cylinder(h = length + poop*2, d1 = diameter_A - 2*wall_thickness, d2 = diameter_B - 2*wall_thickness, center = false, $fn = cylinder_resolution);
         }
     }
 }
@@ -111,6 +150,11 @@ module dust_hose_adapter() {
 
     top_base_inner_diameter = top_is_outer_fitting ? top_taper_diameter_base : top_taper_diameter_base - 2*top_wall_thickness;
     bot_base_inner_diameter = bot_is_outer_fitting ? bot_taper_diameter_base : bot_taper_diameter_base - 2*bot_wall_thickness;
+
+
+    mid_middle_outer_diameter = (top_base_outer_diameter + bot_base_outer_diameter) / 2;
+
+
     
     difference() {
         union() {
@@ -127,8 +171,23 @@ module dust_hose_adapter() {
             
             // Conical mid section
             translate([0, 0, top_length]) {
-                cylinder(h = mid_length, d1 = top_base_outer_diameter, d2 = bot_base_outer_diameter, center = false);
+                cylinder(h = mid_length, d1 = top_base_outer_diameter, d2 = bot_base_outer_diameter, center = false, $fn = cylinder_resolution);
             }
+
+            // Logo emboss on conical section
+            if (enable_logo) {
+                // Calculate the angle of the conical section
+                cone_angle = atan2(mid_length, (bot_base_outer_diameter - top_base_outer_diameter) / 2);
+                
+                translate([-mid_middle_outer_diameter/2, 0, top_length + mid_length/2]) {
+                    
+                    rotate([0, 0, 90])
+                        rotate([90+cone_angle, 0, 0])
+                            logo();
+                }
+            }
+            
+            
             
             // Bottom tapered section (additive part only)
             translate([0, 0, top_length + mid_length]) {
@@ -160,7 +219,7 @@ module dust_hose_adapter() {
         // Cut out inner passages for mid section connections
         // Top to mid connection
         translate([0, 0, top_length - poop]) {
-            cylinder(h = mid_length + 2*poop, d1 = top_base_inner_diameter, d2 = bot_base_inner_diameter, center = false);
+            cylinder(h = mid_length + 2*poop, d1 = top_base_inner_diameter, d2 = bot_base_inner_diameter, center = false, $fn = cylinder_resolution);
         }
         
         // Top section subtractive part
@@ -201,5 +260,6 @@ module dust_hose_adapter() {
         }
     }
 }
+            
 
 dust_hose_adapter(); 

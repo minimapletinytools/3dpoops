@@ -37,15 +37,47 @@ side_hole_bore_depth = 10;
 // increase mounting hole dimensions by this amount to account for FDM overextrusion
 fdm_overextrusion_offset = 0.05; 
 
-
-
 // chamfer radius for rounded edges
 chamfer_radius = 2; // 2mm radius for rounded corners
 
 // annoying openSCAD stuff
 poop = 0.01;
 
+// Logo parameters
+// add the minimaple logo 吕 
+enable_logo = true;
+// scale factor for the logo (1.0 = original size)
+logo_scale = 1;
+// depth to engrave in mm
+logo_depth = 1;          
+
+// Logo module - the 吕 character made of two boxes
+module logo() {
+    logo_width = 7;           // Width of the bottom box
+    logo_height = 4;           // Height of the bottom box
+    logo_top_scale = 0.8;      // Ratio of top box width to bottom box
+    logo_spacing = 1.5;          // Vertical gap between the two boxes
+
+     minkowski() {
+        rotate([90,0,0]) {
+            scale([logo_scale, logo_scale, 1]) {  // scale X and Y, keep Z (depth) unchanged
+                union() {
+                    // Bottom box
+                    translate([-logo_width/2, -logo_height/2, 0])
+                        cube([logo_width, logo_height, logo_depth+poop]);
+                    
+                    // Top box
+                    translate([-logo_width*logo_top_scale/2, logo_height/2 + logo_spacing, 0])
+                        cube([logo_width*logo_top_scale, logo_height, logo_depth+poop]);
+                }
+            }
+        };
+        sphere(r = 0.2, $fn = 24); 
+    }
+}
+
 module wood_threader() {
+
     difference() {
         // Main rectangular body
         // chamfer the edges of the block
@@ -60,6 +92,20 @@ module wood_threader() {
             }
             sphere(r = chamfer_radius, $fn = 32);
         }
+
+
+        // Add logo if enabled
+        if (enable_logo) {
+            // Position logo on the top face of the block
+            z_offset = height/2+poop;
+            x_offset = 0;  // center horizontally
+            y_offset = 0;  // center front-to-back
+            
+            translate([x_offset, y_offset, z_offset])
+                rotate([90, 0, 0])  // keep upright
+                    logo();
+        }
+
 
         // mounting holes for direct tapping M5 screws spaced 100mm apart (adjust this to fit your router)
         for (i = [-1, 1]) {

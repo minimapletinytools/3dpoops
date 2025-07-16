@@ -27,7 +27,33 @@ side_angle = 45;            // Angle at which side port sticks out (degrees)
 wall_thickness = 2;         // Wall thickness (calculated from inner/outer diameters)
 poop = 0.1;                 // Small overlap for boolean operations
 
-// ===== DUST HOSE ADAPTER =====
+
+// Engrave the 吕 logo on the front face
+module logo() {
+    logo_width = 7;           // Width of the bottom box
+    logo_height = 4;           // Height of the bottom box
+    logo_top_scale = 0.8;      // Ratio of top box width to bottom box
+    logo_spacing = 1.5;          // Vertical gap between the two boxes
+
+     minkowski() {
+        rotate([90,0,0]) {
+            scale([logo_scale, logo_scale, 1]) {  // scale X and Y, keep Z (depth) unchanged
+                union() {
+                    // Bottom box
+                    translate([-logo_width/2, -logo_height/2, 0])
+                        cube([logo_width, logo_height, logo_depth+poop]);
+                    
+                    // Top box
+                    translate([-logo_width*logo_top_scale/2, logo_height/2 + logo_spacing, 0])
+                        cube([logo_width*logo_top_scale, logo_height, logo_depth+poop]);
+                }
+            }
+        };
+        sphere(r = 0.2, $fn = 24); 
+    }
+    
+}
+
 
 module dust_hose_adapter() {
     difference() {
@@ -83,6 +109,8 @@ module dust_hose_adapter() {
         }
     }
 }
+
+
 
 // ===== RENDERING =====
 
