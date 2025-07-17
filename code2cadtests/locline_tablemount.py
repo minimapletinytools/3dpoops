@@ -1,10 +1,11 @@
 from codetocad import *
 
+
+base_offset = -30
 # Create the rectangular base
-# Dimensions: 101.6mm x 203.2mm x 12.7mm thick
 base = Part("base")
-base.create_cube(101.6, 203.2, 12.7)
-base.translate_y(38.1)
+base.create_cube(115, 203, 12)
+base.translate_y(base_offset)
 
 # Create landmarks for hole positioning
 base.create_landmark("main_hole_center", 0, 0, 0)  # Center of base
@@ -40,6 +41,34 @@ mounting_hole2.translate_xyz(mounting_hole2_pos.x, mounting_hole2_pos.y, mountin
 base.subtract(hole)
 base.subtract(mounting_hole1)
 base.subtract(mounting_hole2)
+
+# Add two narrow support rectangles along the long edges
+support_width = 10
+support_height = 10
+base_length =203
+base_width = 115
+
+# Left support - runs along the left long edge
+left_support = Part("left_support")
+left_support.create_cube(support_width, base_length, support_height)
+# Position: flush with left side, on top of base
+left_support.translate_xyz(-base_width/2 + support_width/2, base_offset, support_height)
+
+# Right support - runs along the right long edge
+right_support = Part("right_support")
+right_support.create_cube(support_width, base_length, support_height)
+# Position: flush with right side, on top of base
+right_support.translate_xyz(base_width/2 - support_width/2, base_offset, support_height)
+
+# make a clamping platform between the supports and the left 1/3 of the base
+clamping_platform = Part("clamping_platform")
+clamping_platform.create_cube(base_width, base_length/3, support_height)
+clamping_platform.translate_xyz(0, base_offset - base_length/3, support_height)
+
+# Union supports to base
+base.union(left_support)
+base.union(right_support)
+base.union(clamping_platform)
 
 # Fillet all edges
 base.fillet_all_edges(5)
