@@ -37,7 +37,7 @@ side_taper_diameter_tip = 38;
 // Diameter at the base of side port
 side_taper_diameter_base = 39;   
 // Length of side port, make this a little longer than you need as part of it is sticking into the mid section
-side_length = 70;                
+side_length = 85;                
 // Angle at which side port sticks out (degrees)
 side_angle = -45;                 
 // Set to true if this is an outer fitting, false for inner fitting
