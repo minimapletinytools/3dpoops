@@ -1,10 +1,19 @@
 // Chisel Sheath by 吕 minimaple 
 
-chisel_width = 106;
-chisel_tip_thickness = 6;
-chisel_end_thickness = 8;
-chisel_bevel_length = 13;
-chisel_length = 42;
+// width of chisel in mm
+chisel_width = 19;
+
+// thickness of chisel right where the bevel starts in mm
+chisel_tip_thickness = 4.9;
+
+// thickness of chisel at end of sheath in mm
+chisel_end_thickness = 6.5;
+
+// The length of the bevel (tapering to 0mm). You can set this to 0 if you don't want the chisel shape in the mortise.
+chisel_bevel_length = 5;
+
+// length of the chisel (measured from the tip) you want inside the sheath in mm
+chisel_length = 62;
 
 // wall thickness (top/bottom) in mm
 sheath_wall_thickness = 2;
@@ -28,11 +37,11 @@ very_tip_thickness_buffer = 1;
 enable_ears = true;
 
 // distance between the ears in mm
-ear_distance = 50;
+ear_distance = 25;
 // height of the cylinder in the sheath length plane in mm
 ear_height = 3;
 // width of the cylinder in mm
-ear_width = 6;
+ear_width = 4;
 // position relative to the tip of the sheath (0 = at tip, positive = above tip, negative = below tip) in mm
 ear_position = 0;
 // depth of the cylinder extrusion in mm
@@ -45,7 +54,7 @@ eye_height = 1.5;
 // width of the eye cylinder in mm
 eye_width = 1.7;
 // distance between the eyes in mm
-eye_distance = 30;
+eye_distance = 20;
 // position of the eyes relative to the height of the sheath (0 at the bottom, 1 at the top)
 eye_position_ratio = 0.8;
 
@@ -54,7 +63,7 @@ eye_position_ratio = 0.8;
 // add the minimaple logo 吕 
 enable_logo = true;
 // scale factor for the logo (1.0 = original size)
-logo_scale = 0.8;
+logo_scale = 0.6;
 // depth of emboss (engrave) in mm
 logo_depth = 0.8;            
 // "emboss" or "engrave"
@@ -254,7 +263,7 @@ module logo_on_sheath(style, side) {
         // the total distance along the angle we want to offset the logo by, not entirely correct but whatever
         angled_offset = (chisel_tip_thickness + chisel_end_thickness) / 2 + sheath_wall_thickness * 2 + emboss_offset + minkowski_radius;
 
-        z_offset = chisel_length / 2 - chisel_bevel_length - sheath_front_thickness + sin(taper_angle) * angled_offset;
+        z_offset = (chisel_length - chisel_bevel_length)/2 - sheath_front_thickness + sin(taper_angle) * angled_offset;
         x_offset = cos(taper_angle) * angled_offset;
         y_offset = 0;
 
