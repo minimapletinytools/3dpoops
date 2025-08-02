@@ -1,10 +1,11 @@
 // wood dowel threading block that attaches directly to a trim router
 
-use <BOSL/threading.scad>
+include <BOSL2/std.scad>
+include <BOSL2/threading.scad>
 
 // primary screw parameters
 // screw diameter, you may want to make this slightly larger than the nominal size of the rod.
-screw_diameter = 19.2; 
+screw_diameter = 25.4; 
 // threads per inch (6 to match the beall threader)
 tpi = 6; 
 
@@ -127,8 +128,8 @@ module wood_threader() {
         }
 
 
-        // Threaded hole using BOSL library
-        // the reason we don't start the thread in the middle of the block is so that we can consistently align the start of the threads with the center of the hole (threads grow out from the middle in bosl library)
+        // Threaded hole using BOSL2 library
+        // the reason we don't start the thread in the middle of the block is so that we can consistently align the start of the threads with the center of the hole (threads grow out from the middle in bosl2 library)
         {
             translate([0, 0, thread_z_location - threading_block_height/2])
             rotate([90, 0, 0])
@@ -151,15 +152,15 @@ module wood_threader() {
             difference()
             {
                 
-                // make the cylinder go 1/4 of a tooth past the center
-                overstep = 25.4/tpi*1/4;
+                // make the cylinder go a little past teh center
+                overstep = 25.4/tpi*13/27;
                 translate([0, mounting_plate_width/2 - overstep, thread_z_location - threading_block_height/2])
                     rotate([90, 0, 0])
                         cylinder(h = mounting_plate_width, d = screw_diameter, center = true);
 
                 // now chop off the bottom corner of the cylinder so that the threads reach the hole
-                translate([screw_diameter/2, -overstep*4/3, -screw_diameter/2])
-                   cube([screw_diameter, overstep*8/3, screw_diameter], center = true);
+                translate([screw_diameter/2, -overstep*5/3, -screw_diameter/2])
+                   cube([screw_diameter, overstep*11/3, screw_diameter], center = true);
             }
         }
 
