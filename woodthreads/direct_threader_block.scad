@@ -8,16 +8,15 @@ screw_diameter = 19.2;
 // threads per inch (6 to match the beall threader)
 tpi = 6; 
 
-// Convert to inches for calculations (1 inch = 25.4 mm)
 screw_diameter_inch = screw_diameter / 25.4;
 
 // Main dimensions
 // screw goes in this direction, make this longer for more support I guess. 2.5 seems fine.
-width = 2.5 * 25.4;  
+threading_block_width = 2.5 * 25.4;  
 // length of the threading block
-length = screw_diameter * 2.5;
+threading_block_length = screw_diameter * 2.5;
 // height of the threading block
-height = (screw_diameter_inch + 0.75) * 25.4;
+threading_block_height = (screw_diameter_inch + 0.75) * 25.4;
 
 // center hole location parameters
 thread_z_padding = 3/8 * 25.4; // 1/4 inch in mm
@@ -27,6 +26,11 @@ thread_z_location = thread_z_padding + screw_diameter_inch/2 * 25.4; // 1/4" + s
 mounting_plate_thickness = 10;
 mounting_plate_width = 120;
 mounting_plate_length = 120;
+
+// mounting hole parameters
+mounting_hole_width_spacing = 100;  // distance between holes in width direction (mm)
+mounting_hole_height_spacing = 100; // distance between holes in height direction (mm)
+mounting_hole_diameter = 4.8;       // diameter of mounting holes (mm)
 
 // alignment and screw hole dimensions
 center_hole_diameter = 3/8 * 25.4; // 3/8 inch in mm
@@ -47,6 +51,10 @@ logo_depth = 1;
 
 // annoying openSCAD stuff
 poop = 0.01;
+
+// Validate that mounting hole spacing is larger than threading block dimensions
+assert(mounting_hole_width_spacing > threading_block_width, "Mounting hole width spacing must be larger than threading block width");
+assert(mounting_hole_height_spacing > threading_block_length, "Mounting hole height spacing must be larger than threading block length");
 
 // Logo module - the 吕 character made of two boxes
 module logo() {
@@ -81,10 +89,10 @@ module wood_threader() {
         
         minkowski() {
             union() {
-                translate([-length/2 + chamfer_radius, -width/2 + chamfer_radius, -height/2 + chamfer_radius])
-                    cube([length - 2*chamfer_radius, width - 2*chamfer_radius, height - 2*chamfer_radius]);
+                translate([-threading_block_length/2 + chamfer_radius, -threading_block_width/2 + chamfer_radius, -threading_block_height/2 + chamfer_radius])
+                    cube([threading_block_length - 2*chamfer_radius, threading_block_width - 2*chamfer_radius, threading_block_height - 2*chamfer_radius]);
                 // make a mounting plate at the bottom of the block
-                translate([-mounting_plate_length/2, -mounting_plate_width/2,  -height/2 + chamfer_radius ])
+                translate([-mounting_plate_length/2, -mounting_plate_width/2,  -threading_block_height/2 + chamfer_radius ])
                     cube([mounting_plate_length, mounting_plate_width, mounting_plate_thickness]);
             }
             sphere(r = chamfer_radius, $fn = 32);
@@ -94,7 +102,7 @@ module wood_threader() {
         // Add logo if enabled
         if (enable_logo) {
             // Position logo on the top face of the block
-            z_offset = height/2+poop;
+            z_offset = threading_block_height/2+poop;
             x_offset = 0;  // center horizontally
             y_offset = 0;  // center front-to-back
             
@@ -104,25 +112,25 @@ module wood_threader() {
         }
 
 
-        // mounting holes for direct tapping M5 screws spaced 100mm apart (adjust this to fit your router)
+        // mounting holes for direct tapping screws (parametric spacing and diameter)
         for (i = [-1, 1]) {
             for (j = [-1, 1]) {
-                translate([i * 50, j * 50, 0])
-                    cylinder(h = 100, d = 4.8, center = true);
+                translate([i * mounting_hole_width_spacing/2, j * mounting_hole_height_spacing/2, 0])
+                    cylinder(h = 100, d = mounting_hole_diameter, center = true);
             }
         }
     
         {
             // Center hole (3/8" diameter, halfway down)
-            translate([0, 0, -height/4])
-            cylinder(h = height/2 + poop, d = center_hole_diameter, center = true);
+            translate([0, 0, -threading_block_height/4])
+            cylinder(h = threading_block_height/2 + poop, d = center_hole_diameter, center = true);
         }
 
 
         // Threaded hole using BOSL library
         // the reason we don't start the thread in the middle of the block is so that we can consistently align the start of the threads with the center of the hole (threads grow out from the middle in bosl library)
         {
-            translate([0, 0, thread_z_location - height/2])
+            translate([0, 0, thread_z_location - threading_block_height/2])
             rotate([90, 0, 0])
             // the center of the thread starts on the +x axis in the center of therod so we need to rotate by 90 degrees for alignment
             rotate([0, 0, 90])
@@ -139,13 +147,13 @@ module wood_threader() {
 
         // we actually only want half the hole threaded, cut out the threads from the other half with a screw_diameter cylinder with some awkward cutouts
         {
-            //translate([0, mounting_plate_width/2 + 25.4/tpi/2, thread_z_location - height/2])
+            //translate([0, mounting_plate_width/2 + 25.4/tpi/2, thread_z_location - threading_block_height/2])
             difference()
             {
                 
                 // make the cylinder go 1/4 of a tooth past the center
                 overstep = 25.4/tpi*1/4;
-                translate([0, mounting_plate_width/2 - overstep, thread_z_location - height/2])
+                translate([0, mounting_plate_width/2 - overstep, thread_z_location - threading_block_height/2])
                     rotate([90, 0, 0])
                         cylinder(h = mounting_plate_width, d = screw_diameter, center = true);
 
@@ -156,13 +164,13 @@ module wood_threader() {
         }
 
         // cut off the top so we can see what's going on
-        //translate([0, 0, height])
+        //translate([0, 0, threading_block_height])
         //    cube([100, 100, 100], center = true);
 
         // now clean out the pointy thread ends to match the beall tap
         /*
         {
-            translate([0, mounting_plate_width/2, thread_z_location - height/2])
+            translate([0, mounting_plate_width/2, thread_z_location - threading_block_height/2])
             rotate([90, 0, 0])
             cylinder(h = mounting_plate_width, d = screw_diameter - 1/8 * 25.4, center = true);
         }*/
