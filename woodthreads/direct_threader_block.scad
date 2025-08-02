@@ -18,8 +18,8 @@ threading_block_length = screw_diameter * 2.5;
 // height of the threading block
 threading_block_height = (screw_diameter_inch + 0.75) * 25.4;
 
-// center hole location parameters
-thread_z_padding = 3/8 * 25.4; // 1/4 inch in mm
+// the distance between the surface of the jig and the top of the threading hole
+thread_z_padding = 3/8 * 25.4;
 thread_z_location = thread_z_padding + screw_diameter_inch/2 * 25.4; // 1/4" + screw radius in mm
 
 // mounting plate dimensions
@@ -27,16 +27,13 @@ mounting_plate_thickness = 10;
 mounting_plate_width = 120;
 mounting_plate_length = 120;
 
-// mounting hole parameters
+// mounting plate hole dimensions, adjust these to fit your router.
 mounting_hole_width_spacing = 100;  // distance between holes in width direction (mm)
 mounting_hole_height_spacing = 100; // distance between holes in height direction (mm)
 mounting_hole_diameter = 4.8;       // diameter of mounting holes (mm)
 
 // alignment and screw hole dimensions
-center_hole_diameter = 3/8 * 25.4; // 3/8 inch in mm
-side_hole_diameter = 7/32 * 25.4;  // 7/32 inch in mm
-side_hole_bore_diameter = 10;
-side_hole_bore_depth = 10;
+center_hole_diameter = 3/8 * 25.4;
 
 // chamfer radius for rounded edges
 chamfer_radius = 2; // 2mm radius for rounded corners
@@ -55,6 +52,9 @@ poop = 0.01;
 // Validate that mounting hole spacing is larger than threading block dimensions
 assert(mounting_hole_width_spacing > threading_block_width, "Mounting hole width spacing must be larger than threading block width");
 assert(mounting_hole_height_spacing > threading_block_length, "Mounting hole height spacing must be larger than threading block length");
+// Validate that mounting holes fit within the mounting plate
+assert(mounting_hole_width_spacing < mounting_plate_width, "Mounting hole width spacing must be smaller than mounting plate width");
+assert(mounting_hole_height_spacing < mounting_plate_length, "Mounting hole height spacing must be smaller than mounting plate length");
 
 // Logo module - the 吕 character made of two boxes
 module logo() {
