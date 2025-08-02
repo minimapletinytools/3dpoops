@@ -16,9 +16,9 @@ router_hole_width = 54;     // spacing between router holes in width direction
 router_hole_height = 45;    // spacing between router holes in height direction
 router_hole_diameter = 4;   // diameter of router mounting holes
 
-// Countersink parameters for router holes
-countersink_diameter = 8;   // diameter of countersink
-countersink_depth = 3;      // depth of countersink
+// Counterbore parameters for router holes
+router_hole_counterbore_diameter = 8;   // diameter of counterbore
+router_hole_counterbore_depth = 3;      // depth of counterbore
 
 // Mounting holes (for threader block to attach)
 mounting_hole_width = 100;   // spacing between mounting holes in width direction
@@ -44,16 +44,16 @@ module router_base() {
         translate([0, 0, 0])
             cylinder(h = base_height + 2*poop, d = center_hole_diameter, center = true);
         
-        // Router mounting holes with countersinks (attach to router)
+        // Router mounting holes with counterbores (attach to router)
         for (i = [-1, 1]) {
             for (j = [-1, 1]) {
                 translate([i * router_hole_width/2, j * router_hole_height/2, 0]) {
                     // Through hole
                     cylinder(h = base_height + 2*poop, d = router_hole_diameter, center = true);
                     
-                    // Countersink from bottom
-                    translate([0, 0, -base_height/2 + countersink_depth/2 - poop])
-                        cylinder(h = countersink_depth + poop, d = countersink_diameter, center = true);
+                    // Counterbore from bottom
+                    translate([0, 0, -base_height/2 + router_hole_counterbore_depth/2 - poop])
+                        cylinder(h = router_hole_counterbore_depth + poop, d = router_hole_counterbore_diameter, center = true);
                 }
             }
         }
