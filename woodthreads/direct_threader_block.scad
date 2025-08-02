@@ -34,14 +34,8 @@ side_hole_diameter = 7/32 * 25.4;  // 7/32 inch in mm
 side_hole_bore_diameter = 10;
 side_hole_bore_depth = 10;
 
-// increase mounting hole dimensions by this amount to account for FDM overextrusion
-fdm_overextrusion_offset = 0.05; 
-
 // chamfer radius for rounded edges
 chamfer_radius = 2; // 2mm radius for rounded corners
-
-// annoying openSCAD stuff
-poop = 0.01;
 
 // Logo parameters
 // add the minimaple logo 吕 
@@ -50,6 +44,9 @@ enable_logo = true;
 logo_scale = 1;
 // depth to engrave in mm
 logo_depth = 1;          
+
+// annoying openSCAD stuff
+poop = 0.01;
 
 // Logo module - the 吕 character made of two boxes
 module logo() {
@@ -118,7 +115,7 @@ module wood_threader() {
         {
             // Center hole (3/8" diameter, halfway down)
             translate([0, 0, -height/4])
-            cylinder(h = height/2 + poop, d = center_hole_diameter + fdm_overextrusion_offset, center = true);
+            cylinder(h = height/2 + poop, d = center_hole_diameter, center = true);
         }
 
 
