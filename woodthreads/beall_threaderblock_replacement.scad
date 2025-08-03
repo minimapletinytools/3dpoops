@@ -2,7 +2,8 @@
 // this design prints the block larger than the beall delrin blocks and does not fit with the wood board that comes with the threader
 // it is not necessary, just clamp directly to the block
 
-use <BOSL/threading.scad>
+include <BOSL2/std.scad>
+include <BOSL2/threading.scad>
 
 // primary screw parameters
 // screw diameter, you may want to make this slightly larger than the nominal size of the rod.
@@ -70,7 +71,7 @@ module wood_threader() {
             cylinder(h = screw_diameter/2, d = side_hole_bore_diameter, center = true);
         }
 
-        // Threaded hole using BOSL library
+        // Threaded hole using BOSL2 library
         {
             translate([0, 0, 0])
             rotate([90, 0, 0])
@@ -93,15 +94,15 @@ module wood_threader() {
             difference()
             {
                 
-                // make the cylinder go 1/4 of a tooth past the center
-                overstep = 25.4/tpi*1/4;
+                // make the cylinder go a little past the center
+                overstep = 25.4/tpi*13/27;
                 translate([0, width/2 - overstep, 0])
                     rotate([90, 0, 0])
                         cylinder(h = width, d = screw_diameter, center = true);
 
                 // now chop off the bottom corner of the cylinder so that the threads reach the hole
-                translate([screw_diameter/2, -overstep*4/3, -screw_diameter/2])
-                   cube([screw_diameter, overstep*8/3, screw_diameter], center = true);
+                translate([screw_diameter/2, -overstep*5/3, -screw_diameter/2])
+                   cube([screw_diameter, overstep*11/3, screw_diameter], center = true);
             }
         }
 
@@ -113,8 +114,8 @@ module wood_threader() {
         }
 
         // cut off the top so we can see what's going on
-        translate([0, 0, height])
-            cube([100, 100, 100], center = true);
+        //translate([0, 0, height])
+            //cube([100, 100, 100], center = true);
     }
 }
 

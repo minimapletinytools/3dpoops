@@ -14,6 +14,7 @@ center_hole_diameter = 30;  // mm
 // Router mounting holes (attach to router)
 router_hole_width = 54;     // spacing between router holes in width direction
 router_hole_height = 45;    // spacing between router holes in height direction
+router_hole_height_offset = 9.5; // holes offset in the height direction, becaues not all routers have centered hole spacing. See README.md for specific example of how this works.
 router_hole_diameter = 4;   // diameter of router mounting holes
 
 // Counterbore parameters for router holes
