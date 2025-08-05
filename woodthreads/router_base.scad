@@ -8,13 +8,16 @@ base_width = 120;    // mm
 base_length = 120;   // mm  
 base_height = 10;    // mm
 
-// Center hole
-center_hole_diameter = 30;  // mm
 
-// Router mounting holes (attach to router)
+
+
+// Center hole
+center_hole_diameter = 35.5;  
+
+// Router mounting holes (attach to router, default values fit Makita RT0701C)
 router_hole_width = 54;     // spacing between router holes in width direction
 router_hole_height = 45;    // spacing between router holes in height direction
-router_hole_height_offset = 9.5; // holes offset in the height direction, becaues not all routers have centered hole spacing. See README.md for specific example of how this works.
+router_hole_height_offset = 3.5; // holes offset in the height direction, becaues not all routers have centered hole spacing. See README.md for specific example of how this works.
 router_hole_diameter = 4;   // diameter of router mounting holes
 
 // Counterbore parameters for router holes
@@ -48,7 +51,7 @@ module router_base() {
         // Router mounting holes with counterbores (attach to router)
         for (i = [-1, 1]) {
             for (j = [-1, 1]) {
-                translate([i * router_hole_width/2, j * router_hole_height/2, 0]) {
+                translate([i * router_hole_width/2, j * router_hole_height/2 + router_hole_height_offset, 0]) {
                     // Through hole
                     cylinder(h = base_height + 2*poop, d = router_hole_diameter, center = true);
                     

@@ -17,7 +17,7 @@ To mount the jigs on the router, you can use the `router_base.scad`. It has 2 se
 
 ![Makita RT0701C Mounting Holes](makita_trim_router_mounting_holes.png)
 
-As you can see the center holes are offset by (45 - 26)/2 so we set `router_hole_height_offset = 9.5`. The default parameters in `router_base.scad` are set to match the Makita RT0701C trim router. 
+As you can see the center holes are offset by (45/2 - 26)  so we set `router_hole_height_offset = 9.5`. The default parameters in `router_base.scad` are set to match the Makita RT0701C trim router. 
 
 ### Threading Dowels
 
