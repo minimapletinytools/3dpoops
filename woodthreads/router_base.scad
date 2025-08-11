@@ -14,8 +14,8 @@ base_height = 10;    // mm
 // Center hole
 center_hole_diameter = 35.5;  
 
-// Router mounting holes (attach to router, default values fit Makita RT0701C)
-router_hole_width = 54;     // spacing between router holes in width direction
+// Router mounting holes (attach to router, default values fit Makita  XTR01Z)
+router_hole_width = 56;     // spacing between router holes in width direction
 router_hole_height = 45;    // spacing between router holes in height direction
 router_hole_height_offset = 3.5; // holes offset in the height direction, becaues not all routers have centered hole spacing. See README.md for specific example of how this works.
 router_hole_diameter = 4;   // diameter of router mounting holes
