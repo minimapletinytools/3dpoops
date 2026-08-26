@@ -216,6 +216,33 @@
 <small>
 
 - Reduced number of floor joists to 3 (`cot_num_floor_joists = 3`), giving $18"$ on-center spacing with the center joist aligned with the middle stud.
-- Staged and committed all changes to git.
+- Staged and committed all changes to git (commit `8410927`).
+
+</small>
+
+---
+
+## 19. Rim Joist to Post Mortise & Tenon Joints
+> **"next up, we'll add joints, connect each of the rim joists to the corner posts using mortise and tenon joints, remembre the joints need to be offset so they don't intersect. the tennos should be 1\"x1.5\" in dimension, they should be 3\" long so they don't extend beyond the posts and they should be held in plac eby a 5/8\" square peg."**
+
+<small>
+
+- Added `cut_rim_joist_corner_joints()` creating 6 mortise and tenon joints connecting rim joists to corner posts (BL, BR, TR).
+- Sized tenons to $1" \times 1.5"$ and $3"$ long (stopped mortise inside $3\frac{3}{8}"$ posts).
+- Offset tenons vertically by $+13/16"$ for X-running joists (front, back) and $-13/16"$ for Y-running joists (left, right) to provide $1/8"$ vertical clearance and prevent interior intersection.
+- Added $5/8"$ square through-pegs with $1/16"$ draw-bore offset centered on tenons.
+
+</small>
+
+---
+
+## 20. Rail Mortise & Tenon Joints
+> **"ok, next join the front rail to the right post with a mortise and tenon joint, these tenons can be 3\" wide since they aren't intersecting with anything. the right rail can be joined to the back post and mid post simliarly. the left post should actually connect into the bottom of the left rail with a mortise and tenon joint, rather than the other way around. the tenon here needs to be 1.5\"x1 again so that it's not too close to the outside of the end of the rail so as not to blow out the end grain. BTW arey ou familiar with these tenon sizing and placement instrucitons already? Do you need me to remind you about it?"**
+
+<small>
+
+- Added `cut_rail_joints()` joining front rail to BR post ($3" \times 1"$ tenon) and right rail to door post and TR post ($3" \times 1"$ tenons).
+- Terminated BL post at rail underside ($Z = 50\frac{5}{8}"$) and connected top of BL post into bottom of front rail with a $1.5" \times 1"$ tenon offset $+9/16"$ inward to preserve $1.5"$ of end-grain relish and prevent blowout.
+- Fastened all rail joints with $5/8"$ square draw-bored pegs.
 
 </small>
