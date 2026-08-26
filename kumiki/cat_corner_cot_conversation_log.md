@@ -339,3 +339,14 @@ umm lastly make the rafters 2.5\" by 1.5\""**
 - Added a mortise and tenon joint with a $1.5" \times 1"$ tenon and $5/8"$ square draw-bored peg connecting the bottom of `cot_post_door_right` into the top face of `cot_rim_joist_right`.
 
 </small>
+
+---
+
+## 28. Git Commit
+> **"commit changes"**
+
+<small>
+
+- Committed all changes (rafters, front eave overhang, floor boards, door post rim joint) to git (commit `06fee75`).
+
+</small>
