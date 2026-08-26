@@ -21,7 +21,7 @@ Defines:
      - BR post connects into underside of front roof beam.
      - TR post connects into underside of back roof beam.
      - Upper front-left post sits on front rail, offset 1.5" from wall, and connects into front roof beam.
-     - Door post on right side connects into underside of right side tie beam.
+     - Door post on right side connects into top of right rim joist at bottom and underside of right side tie beam at top.
    - 3 3/8" square rim joists around the entire footprint perimeter at floor height 16" (top of rim joist at 16").
    - 3 evenly spaced 3 3/8" square floor joists running from the front to back rim joists (center joist aligned with mid stud).
    - Mortise and tenon joints connecting rim joists to corner posts:
@@ -33,7 +33,10 @@ Defines:
      - Upper left post connects into top of front rail with 1.5" x 1" tenon offset to the right so it doesn't intersect with the bottom post tenon.
      - Front rail connects into BR post with 3" x 1" tenon.
    - 3 3/8" square vertical center stud connecting the front rail to the front rim joist right in the middle.
-   - 3 3/8" square door post on the right rim joist with a 28" door opening from the front post.
+   - 3 3/8" square door post on the right rim joist with a 28" door opening from the front post:
+     - Connects into the top of the right rim joist with a 1.5" x 1" mortise and tenon joint with a 5/8" square peg.
+     - Connects into the right rail (3" x 1" tenon).
+     - Connects into the underside of the right side tie beam (1.5" x 1" tenon).
    - 3 3/8" square right rail at 54" rail height connecting the door post to the back-right post (3" x 1" tenons).
    - 3 3/8" square right side tie beam:
      - Placed 4" below the top of the front roof beam.
@@ -41,9 +44,15 @@ Defines:
      - Mid door post connects into its underside with a mortise and tenon joint.
    - Horizontal infill wall boards (3/4" thick, 3-6" wide face) filling the bays between posts, rim joists, and rails,
      extending 3/8" into posts and rails, resting flush on the rim joists.
+   - Dynamic floor boards (3/4" thick, 3-6" wide face):
+     - Flush with front and back rim joists (0" penetration).
+     - Extend 1/2" into bounding floor joists and rim joists.
+     - Dynamically adapt to any number of floor joists or timber sizes.
    - 3 3/8" square upper roof support beams:
      - Back beam at back_beam_height (top at 11' / 132"), reaching inside corner to the left and sticking out 6" to the right.
      - Front beam over front posts, lowered based on the 20 degree roof pitch to match the support structure roof pitch.
+   - 7 evenly spaced rafters (1.5" wide x 2.5" tall in Z) recessed 0.25" into the front and back plates,
+     extending 12" beyond the front plate.
 """
 
 import math
@@ -102,11 +111,19 @@ cot_upper_left_post_offset_x = inches(3, 2)   # 1.5" offset away from house wall
 # Right side tie beam parameters
 cot_side_beam_drop_from_plate = inches(4)     # 4" below top of front roof plate
 
-# Infill board dimensions
+# Rafter parameters
+cot_num_rafters = 7                           # 7 evenly spaced rafters
+cot_rafter_width_x = inches(3, 2)             # 1.5" width along X
+cot_rafter_height_z = inches(5, 2)            # 2.5" dimension along Z / normal
+cot_rafter_recess = inches(1, 4)              # 0.25" recessed into plates (lifted 1/2" higher than 0.75")
+cot_rafter_overhang_front = inches(12)        # 12" overhang beyond front plate
+
+# Board dimensions (Wall infill & Floor boards)
 cot_board_thickness = inches(3, 4)            # 3/4" thick boards
-cot_board_post_penetration = inches(3, 8)     # 3/8" into each post
+cot_board_post_penetration = inches(3, 8)     # 3/8" into each wall post
 cot_board_rail_penetration = inches(3, 8)     # 3/8" into rail underside
 cot_board_rim_penetration = scalar(0)         # 0" into rim joist (rests flush)
+cot_board_joist_penetration = inches(1, 2)    # 1/2" into floor joists
 cot_board_max_width = inches(6)               # Max board face width (prefer wider)
 cot_board_min_width = inches(3)               # Min board face width
 
@@ -182,7 +199,7 @@ def cut_roof_slope_trim_joint(wall_timbers: list[Timber], roof_plane_point: V3, 
     cuttings = {}
     for i, timber in enumerate(wall_timbers):
         timber_local_hs = adopt_csg(None, timber.transform, global_halfspace)
-        cutting = Cutting(timber=timber, negative_csg=timber_local_hs, label=f"roof_slope_cut_{i}")
+        cutting = Cutting(timber=timber, negativecsg=timber_local_hs, label=f"roof_slope_cut_{i}") if hasattr(timber, 'negativecsg') else Cutting(timber=timber, negative_csg=timber_local_hs, label=f"roof_slope_cut_{i}")
         cuttings[f"wall_timber_{i}"] = cutting
 
     return Joint(
@@ -560,9 +577,10 @@ def cut_rail_and_post_joints(
     rails_and_studs: list[Timber],
     roof_beams: list[Timber],
     side_beam_right: Timber,
+    rim_joists: list[Timber],
 ) -> tuple[dict[str, list[Cutting]], list[Accessory]]:
     """
-    Connects rails, posts, roof beams, and the right side tie beam using mortise and tenon joints with 5/8" square pegs:
+    Connects rails, posts, roof beams, side tie beam, and rim joist using mortise and tenon joints with 5/8" square pegs:
     - Front rail to BR post: 3" x 1" tenon, centered.
     - Right rail to door post: 3" x 1" tenon, centered.
     - Right rail to TR post: 3" x 1" tenon, centered.
@@ -575,10 +593,12 @@ def cut_rail_and_post_joints(
     - Side beam front into BR post: 3" x 1" tenon, centered.
     - Side beam back into TR post: 3" x 1" tenon, centered.
     - Door post top into side beam underside: 1.5" x 1" tenon, centered.
+    - Door post bottom into right rim joist top: 1.5" x 1" tenon, centered.
     """
     post_bl, post_br, post_tr, upper_left_post = posts
     front_rail, front_mid_stud, door_post_right, right_rail = rails_and_studs
     back_beam, front_beam = roof_beams
+    right_rim = rim_joists[1]
 
     peg_params = SimplePegParameters(
         shape=PegShape.SQUARE,
@@ -764,6 +784,22 @@ def cut_rail_and_post_joints(
         peg_parameters=peg_params,
     )
 
+    # 12. Door Post bottom into Right Rim Joist top (1.5" x 1" tenon, centered)
+    j_door_post_rim = cut_mortise_and_tenon_joint_on_face_aligned_timbers(
+        arrangement=ButtJointTimberArrangement(
+            receiving_timber=right_rim,
+            butt_timber=door_post_right,
+            butt_timber_end=TimberEnd.BOTTOM,
+            front_face_on_butt_timber=TimberLongFace.FRONT,
+        ),
+        tenon_width_relative_to_joint=cot_rim_tenon_height,
+        tenon_height_relative_to_joint=cot_rim_tenon_thickness,
+        tenon_length=inches(5, 2),
+        mortise_depth=inches(5, 2),
+        tenon_position=Matrix([scalar(0), scalar(0)]),
+        peg_parameters=peg_params,
+    )
+
     joints = [
         j_front_rail_br,
         j_right_rail_door,
@@ -776,6 +812,7 @@ def cut_rail_and_post_joints(
         j_side_beam_br,
         j_side_beam_tr,
         j_door_post_side_beam,
+        j_door_post_rim,
     ]
 
     cuts_by_path: dict[str, list[Cutting]] = {}
@@ -788,6 +825,74 @@ def cut_rail_and_post_joints(
         accessories.extend(j.jointAccessories.values())
 
     return cuts_by_path, accessories
+
+
+def create_cot_rafters() -> list[Timber]:
+    """
+    Creates 7 evenly spaced rafters (1.5" wide x 2.5" tall in Z) across the front and back plates,
+    recessed 0.25" into the plates (lifted 1/2" higher than 0.75") and extending 12" beyond the front plate.
+    """
+    roof_slope = roof_slope_deg
+    front_beam_top_z = compute_front_beam_height()
+    recess = cot_rafter_recess
+    front_overhang = cot_rafter_overhang_front
+
+    y_front_center = cot_corner_offset_y - cot_length_y + cot_timber_cross_section / scalar(2)
+    y_front_plate_face = cot_corner_offset_y - cot_length_y  # -64.5"
+    y_start = y_front_plate_face - front_overhang            # -76.5"
+    y_end = cot_corner_offset_y                              # -0.5"
+    y_span = y_end - y_start                                 # 76.0"
+    rafter_length = y_span / cos(roof_slope)
+
+    length_dir = create_v3(scalar(0), cos(roof_slope), sin(roof_slope))
+    width_dir = create_v3(scalar(1), scalar(0), scalar(0))
+    rafter_size = create_v2(cot_rafter_width_x, cot_rafter_height_z)
+
+    z_bot_at_y_front = front_beam_top_z - recess
+    z_bot_at_y_start = z_bot_at_y_front - (y_front_center - y_start) * tan(roof_slope)
+
+    # First rafter centered at X = 1.25" (flush with X = 0.5" left end),
+    # Last rafter centered at X = 77.75" (flush with X = 78.5" right end)
+    x_start = cot_corner_offset_x + cot_rafter_width_x / scalar(2)
+    x_end = cot_corner_offset_x + cot_width_x + beam_stickout_right - cot_rafter_width_x / scalar(2)
+    x_span = x_end - x_start
+
+    rafters = []
+    for i in range(cot_num_rafters):
+        x_pos = x_start + (x_span / scalar(cot_num_rafters - 1)) * scalar(i)
+        bottom_pos_center = create_v3(
+            x_pos,
+            y_start + (cot_rafter_height_z / scalar(2)) * (-sin(roof_slope)),
+            z_bot_at_y_start + (cot_rafter_height_z / scalar(2)) * (cos(roof_slope)),
+        )
+        rafter = create_timber(
+            length=rafter_length,
+            size=rafter_size,
+            bottom_position=bottom_pos_center,
+            length_direction=length_dir,
+            width_direction=width_dir,
+            ticket=TimberTicket(path=f"cot_rafter_{i}", tags=("rafter", "roof", "cot")),
+        )
+        rafters.append(rafter)
+
+    return rafters
+
+
+def cut_rafter_housing_joints(
+    roof_beams: list[Timber],
+    rafters: list[Timber],
+) -> dict[str, list[Cutting]]:
+    """
+    Cuts recessed housing notches (0.25" deep) in the front and back roof plates for the 7 rafters.
+    """
+    back_beam, front_beam = roof_beams
+    j_front_housing = cut_free_house_joint(housing_timber=front_beam, housed_timbers=rafters)
+    j_back_housing = cut_free_house_joint(housing_timber=back_beam, housed_timbers=rafters)
+
+    return {
+        front_beam.ticket.path: [j_front_housing.cuttings["housing_timber"]],
+        back_beam.ticket.path: [j_back_housing.cuttings["housing_timber"]],
+    }
 
 
 def create_cot_floor_joists() -> list[Timber]:
@@ -821,12 +926,84 @@ def create_cot_floor_joists() -> list[Timber]:
     return joists
 
 
+def create_cot_floor_boards() -> list[Timber]:
+    """
+    Fills the spaces between floor joists and rim joists with floor boards:
+    - Boards are flush with the inside face of the front and back rim joists.
+    - Boards extend 1/2" into bounding joists and rim joists.
+    - Board widths are dynamically sized between 3" and 6" (preferring wider).
+    - Dynamically adapts to any number of floor joists or timber sizes.
+    """
+    timber_cs = cot_timber_cross_section
+    x_start = cot_corner_offset_x
+    x_length = cot_width_x
+    x_end = x_start + x_length
+
+    y_start = cot_corner_offset_y - cot_length_y
+    y_end = cot_corner_offset_y
+    y_front_inner = y_start + timber_cs
+    y_back_inner = y_end - timber_cs
+    total_y_length = y_back_inner - y_front_inner
+
+    max_board_width = cot_board_max_width
+    board_thickness = cot_board_thickness
+    joist_penetration = cot_board_joist_penetration
+
+    num_boards_y = math.ceil(float(total_y_length) / float(max_board_width))
+    board_width_y = total_y_length / scalar(num_boards_y)
+
+    left_rim_inner_x = x_start + timber_cs
+    right_rim_inner_x = x_end - timber_cs
+    num_joists = cot_num_floor_joists
+    spacing = x_length / scalar(num_joists + 1)
+
+    bay_x_ranges = []
+    for i in range(num_joists + 1):
+        if i == 0:
+            bay_left = left_rim_inner_x
+        else:
+            joist_center_left = x_start + spacing * scalar(i)
+            bay_left = joist_center_left + timber_cs / scalar(2)
+
+        if i == num_joists:
+            bay_right = right_rim_inner_x
+        else:
+            joist_center_right = x_start + spacing * scalar(i + 1)
+            bay_right = joist_center_right - timber_cs / scalar(2)
+
+        bay_x_ranges.append((bay_left, bay_right))
+
+    floor_boards = []
+    z_top = cot_floor_height
+    z_mid = z_top - board_thickness / scalar(2)
+
+    for bay_idx, (b_left, b_right) in enumerate(bay_x_ranges):
+        x_span_length = (b_right - b_left) + scalar(2) * joist_penetration
+        x_pos_start = b_left - joist_penetration
+
+        for j in range(num_boards_y):
+            y_bot = y_front_inner + board_width_y * scalar(j)
+            y_mid = y_bot + board_width_y / scalar(2)
+
+            board = create_axis_aligned_timber(
+                bottom_position=create_v3(x_pos_start, y_mid, z_mid),
+                length=x_span_length,
+                size=create_v2(board_thickness, board_width_y),
+                length_direction=TimberFace.RIGHT,
+                width_direction=TimberFace.TOP,
+                ticket=TimberTicket(path=f"cot_floor_board_bay_{bay_idx}_{j}", tags=("floor_board", "floor", "cot")),
+            )
+            floor_boards.append(board)
+
+    return floor_boards
+
+
 def create_cot_rails_and_studs() -> list[Timber]:
     """
     Creates front rail, front middle stud, right door post, and right rail.
     - Front rail: 3 3/8" square, top at 54", spans between front posts
     - Front mid stud: 3 3/8" square, right in the middle (X = 36.5"), connecting rim joist to rail
-    - Right door post: 3 3/8" square, stops at right side tie beam underside
+    - Right door post: 3 3/8" square, starts on top of right rim joist (Z = 16") and stops at right side tie beam underside
     - Right rail: 3 3/8" square, top at 54", connecting door post to back-right post
     """
     timber_cs = cot_timber_cross_section
@@ -872,12 +1049,14 @@ def create_cot_rails_and_studs() -> list[Timber]:
     )
 
     # 3. Right Door Post (space between front-right post and door post is door_width = 28")
+    # Starts on top of right rim joist (Z = 16") and reaches side beam underside
     door_post_y_front = y_start + timber_cs + cot_door_width             # -33.125"
     door_post_y_center = door_post_y_front + timber_cs / scalar(2)       # -31.4375"
+    door_post_length = side_beam_bot_z - cot_floor_height
 
     door_post_right = create_axis_aligned_timber(
-        bottom_position=create_v3(x_right_center, door_post_y_center, scalar(0)),
-        length=side_beam_bot_z,
+        bottom_position=create_v3(x_right_center, door_post_y_center, cot_floor_height),
+        length=door_post_length,
         size=cot_timber_size,
         length_direction=TimberFace.TOP,
         width_direction=TimberFace.FRONT,
@@ -1023,7 +1202,7 @@ def create_cot_infill_boards() -> list[Timber]:
 def create_cot_roof_beams() -> list[Timber]:
     """
     Creates upper roof support beams across the cot:
-    - Back beam: top at back_beam_height (11' / 132"), reaches inside corner to the left (X = 0.5")
+    - Back beam: top at back_beam_height (11' / 132"), reaching inside corner to the left (X = 0.5")
       and sticks out 6" past the right posts (X = 78.5").
     - Front beam: over front posts, lowered based on the 20 degree roof pitch:
       delta_z = delta_y * tan(20 degrees) so a roof placed over both beams matches the roof pitch.
@@ -1092,12 +1271,14 @@ def build_frame() -> Frame:
     # 3. Supporting structure sloped roof
     cut_roof = create_supporting_roof_cut_timber()
 
-    # 4. Cat cot posts, rim joists, rails, studs, roof beams, and right side tie beam
+    # 4. Cat cot posts, rim joists, rails, studs, roof beams, side tie beam, rafters, and floor boards
     cot_posts = create_cot_posts()
     cot_rim_joists = create_cot_rim_joists()
     cot_rails_and_studs = create_cot_rails_and_studs()
     cot_roof_beams = create_cot_roof_beams()
     cot_side_beam_right = create_cot_side_beam()
+    cot_rafters = create_cot_rafters()
+    cot_floor_boards = create_cot_floor_boards()
 
     # 5. Cut mortise and tenon joints with square pegs
     rim_cuts_by_path, rim_pegs = cut_rim_joist_corner_joints(cot_posts, cot_rim_joists)
@@ -1106,22 +1287,27 @@ def build_frame() -> Frame:
         rails_and_studs=cot_rails_and_studs,
         roof_beams=cot_roof_beams,
         side_beam_right=cot_side_beam_right,
+        rim_joists=cot_rim_joists,
     )
+    rafter_housing_cuts = cut_rafter_housing_joints(cot_roof_beams, cot_rafters)
 
     all_cuts: dict[str, list[Cutting]] = {}
     for path, cuts in rim_cuts_by_path.items():
         all_cuts.setdefault(path, []).extend(cuts)
     for path, cuts in rail_cuts_by_path.items():
         all_cuts.setdefault(path, []).extend(cuts)
+    for path, cuts in rafter_housing_cuts.items():
+        all_cuts.setdefault(path, []).extend(cuts)
 
     all_accessories = rim_pegs + rail_pegs
 
-    # Build CutTimbers for posts, rim joists, rails, studs, beams, and side tie beam
+    # Build CutTimbers for posts, rim joists, rails, studs, beams, side tie beam, rafters, and boards
     cut_posts = [CutTimber(timber=p, cuts=all_cuts.get(p.ticket.path, [])) for p in cot_posts]
     cut_rim_joists = [CutTimber(timber=r, cuts=all_cuts.get(r.ticket.path, [])) for r in cot_rim_joists]
     cut_rails_and_studs = [CutTimber(timber=m, cuts=all_cuts.get(m.ticket.path, [])) for m in cot_rails_and_studs]
     cut_roof_beams = [CutTimber(timber=bm, cuts=all_cuts.get(bm.ticket.path, [])) for bm in cot_roof_beams]
     cut_side_beam = CutTimber(timber=cot_side_beam_right, cuts=all_cuts.get(cot_side_beam_right.ticket.path, []))
+    cut_rafters = [CutTimber(timber=rf) for rf in cot_rafters]
 
     # 6. Cat cot 3 evenly spaced floor joists
     cot_floor_joists = create_cot_floor_joists()
@@ -1139,8 +1325,10 @@ def build_frame() -> Frame:
             *cut_rails_and_studs,
             *cut_roof_beams,
             cut_side_beam,
+            *cut_rafters,
             *[CutTimber(j) for j in cot_floor_joists],
             *[CutTimber(b) for b in cot_infill_boards],
+            *[CutTimber(fb) for fb in cot_floor_boards],
         ],
         accessories=all_accessories,
         name="Cat Corner Cot",

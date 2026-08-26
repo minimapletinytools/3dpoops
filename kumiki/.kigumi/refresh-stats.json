@@ -1,108 +1,209 @@
 {
-  "timestamp": "2026-08-26T00:51:23.597Z",
+  "timestamp": "2026-08-26T02:42:27.937Z",
   "sourceFile": "/Users/giraffe/kitchen/faucet/3dpoops/kumiki/cat_corner_cot.py",
   "reason": "manual refresh button",
   "refresh": {
-    "scriptReloadDuration_ms": 29,
-    "meshBuildDuration_ms": 8,
-    "totalRefreshDuration_ms": 39,
-    "changedTimberCount": 3,
+    "scriptReloadDuration_ms": 43,
+    "meshBuildDuration_ms": 140,
+    "totalRefreshDuration_ms": 190,
+    "changedTimberCount": 104,
     "removedTimberCount": 0,
-    "totalTimberCount": 3,
+    "totalTimberCount": 104,
     "changedTimberKeys": [
       "supporting_wall_top#0",
       "supporting_wall_left#0",
-      "supporting_roof#0"
+      "supporting_roof#0",
+      "cot_post_BL#0",
+      "cot_post_BR#0",
+      "cot_post_TR#0",
+      "cot_post_front_upper_left#0",
+      "cot_rim_joist_front#0",
+      "cot_rim_joist_right#0",
+      "cot_rim_joist_back#0",
+      "cot_rim_joist_left#0",
+      "cot_rail_front#0",
+      "cot_stud_front_mid#0",
+      "cot_post_door_right#0",
+      "cot_rail_right#0",
+      "cot_beam_back#0",
+      "cot_beam_front#0",
+      "cot_beam_right_side#0",
+      "cot_rafter_0#0",
+      "cot_rafter_1#0",
+      "cot_rafter_2#0",
+      "cot_rafter_3#0",
+      "cot_rafter_4#0",
+      "cot_rafter_5#0",
+      "cot_rafter_6#0",
+      "cot_floor_joist_1#0",
+      "cot_floor_joist_2#0",
+      "cot_floor_joist_3#0",
+      "bay_fl_board_0#0",
+      "bay_fl_board_1#0",
+      "bay_fl_board_2#0",
+      "bay_fl_board_3#0",
+      "bay_fl_board_4#0",
+      "bay_fl_board_5#0",
+      "bay_fr_board_0#0",
+      "bay_fr_board_1#0",
+      "bay_fr_board_2#0",
+      "bay_fr_board_3#0",
+      "bay_fr_board_4#0",
+      "bay_fr_board_5#0",
+      "bay_rb_board_0#0",
+      "bay_rb_board_1#0",
+      "bay_rb_board_2#0",
+      "bay_rb_board_3#0",
+      "bay_rb_board_4#0",
+      "bay_rb_board_5#0",
+      "cot_floor_board_bay_0_0#0",
+      "cot_floor_board_bay_0_1#0",
+      "cot_floor_board_bay_0_2#0",
+      "cot_floor_board_bay_0_3#0",
+      "cot_floor_board_bay_0_4#0",
+      "cot_floor_board_bay_0_5#0",
+      "cot_floor_board_bay_0_6#0",
+      "cot_floor_board_bay_0_7#0",
+      "cot_floor_board_bay_0_8#0",
+      "cot_floor_board_bay_0_9#0",
+      "cot_floor_board_bay_1_0#0",
+      "cot_floor_board_bay_1_1#0",
+      "cot_floor_board_bay_1_2#0",
+      "cot_floor_board_bay_1_3#0",
+      "cot_floor_board_bay_1_4#0",
+      "cot_floor_board_bay_1_5#0",
+      "cot_floor_board_bay_1_6#0",
+      "cot_floor_board_bay_1_7#0",
+      "cot_floor_board_bay_1_8#0",
+      "cot_floor_board_bay_1_9#0",
+      "cot_floor_board_bay_2_0#0",
+      "cot_floor_board_bay_2_1#0",
+      "cot_floor_board_bay_2_2#0",
+      "cot_floor_board_bay_2_3#0",
+      "cot_floor_board_bay_2_4#0",
+      "cot_floor_board_bay_2_5#0",
+      "cot_floor_board_bay_2_6#0",
+      "cot_floor_board_bay_2_7#0",
+      "cot_floor_board_bay_2_8#0",
+      "cot_floor_board_bay_2_9#0",
+      "cot_floor_board_bay_3_0#0",
+      "cot_floor_board_bay_3_1#0",
+      "cot_floor_board_bay_3_2#0",
+      "cot_floor_board_bay_3_3#0",
+      "cot_floor_board_bay_3_4#0",
+      "cot_floor_board_bay_3_5#0",
+      "cot_floor_board_bay_3_6#0",
+      "cot_floor_board_bay_3_7#0",
+      "cot_floor_board_bay_3_8#0",
+      "cot_floor_board_bay_3_9#0",
+      "accessory:Peg#0",
+      "accessory:Peg#1",
+      "accessory:Peg#2",
+      "accessory:Peg#3",
+      "accessory:Peg#4",
+      "accessory:Peg#5",
+      "accessory:Peg#6",
+      "accessory:Peg#7",
+      "accessory:Peg#8",
+      "accessory:Peg#9",
+      "accessory:Peg#10",
+      "accessory:Peg#11",
+      "accessory:Peg#12",
+      "accessory:Peg#13",
+      "accessory:Peg#14",
+      "accessory:Peg#15",
+      "accessory:Peg#16",
+      "accessory:Peg#17"
     ],
     "removedTimberKeys": [],
     "timings": {
       "timeline": [
         {
           "step": "refresh.start",
-          "timestamp": "2026-08-26T00:51:23.558Z",
-          "elapsed_ms": 0.001709,
-          "delta_ms": 0.000875,
+          "timestamp": "2026-08-26T02:42:27.747Z",
+          "elapsed_ms": 0.000792,
+          "delta_ms": 0.00025,
           "extra": {
             "reason": "manual refresh button",
-            "refreshToken": 4
+            "refreshToken": 23
           }
         },
         {
           "step": "ensureRunner.start",
-          "timestamp": "2026-08-26T00:51:23.558Z",
-          "elapsed_ms": 0.047959,
-          "delta_ms": 0.04625
+          "timestamp": "2026-08-26T02:42:27.747Z",
+          "elapsed_ms": 0.05125,
+          "delta_ms": 0.050458
         },
         {
           "step": "ensureRunner.end",
-          "timestamp": "2026-08-26T00:51:23.558Z",
-          "elapsed_ms": 0.320542,
-          "delta_ms": 0.272583
+          "timestamp": "2026-08-26T02:42:27.747Z",
+          "elapsed_ms": 0.252292,
+          "delta_ms": 0.201042
         },
         {
           "step": "runner.reload_example.start",
-          "timestamp": "2026-08-26T00:51:23.558Z",
-          "elapsed_ms": 0.356834,
-          "delta_ms": 0.036292
+          "timestamp": "2026-08-26T02:42:27.748Z",
+          "elapsed_ms": 0.348292,
+          "delta_ms": 0.096
         },
         {
           "step": "runner.reload_example.end",
-          "timestamp": "2026-08-26T00:51:23.587Z",
-          "elapsed_ms": 29.432875,
-          "delta_ms": 29.076041
+          "timestamp": "2026-08-26T02:42:27.791Z",
+          "elapsed_ms": 43.937667,
+          "delta_ms": 43.589375
         },
         {
           "step": "runner.get_frame.start",
-          "timestamp": "2026-08-26T00:51:23.587Z",
-          "elapsed_ms": 29.560042,
-          "delta_ms": 0.127167
+          "timestamp": "2026-08-26T02:42:27.791Z",
+          "elapsed_ms": 44.111042,
+          "delta_ms": 0.173375
         },
         {
           "step": "runner.get_frame.end",
-          "timestamp": "2026-08-26T00:51:23.588Z",
-          "elapsed_ms": 29.976042,
-          "delta_ms": 0.416
+          "timestamp": "2026-08-26T02:42:27.792Z",
+          "elapsed_ms": 45.151625,
+          "delta_ms": 1.040583
         },
         {
           "step": "runner.get_geometry.start",
-          "timestamp": "2026-08-26T00:51:23.588Z",
-          "elapsed_ms": 30.047292,
-          "delta_ms": 0.07125
+          "timestamp": "2026-08-26T02:42:27.792Z",
+          "elapsed_ms": 45.245333,
+          "delta_ms": 0.093708
         },
         {
           "step": "runner.get_geometry.end",
-          "timestamp": "2026-08-26T00:51:23.596Z",
-          "elapsed_ms": 38.506959,
-          "delta_ms": 8.459667
+          "timestamp": "2026-08-26T02:42:27.936Z",
+          "elapsed_ms": 188.963208,
+          "delta_ms": 143.717875
         },
         {
           "step": "runner.get_layers_tree.start",
-          "timestamp": "2026-08-26T00:51:23.597Z",
-          "elapsed_ms": 38.680167,
-          "delta_ms": 0.173208
+          "timestamp": "2026-08-26T02:42:27.936Z",
+          "elapsed_ms": 189.173333,
+          "delta_ms": 0.210125
         },
         {
           "step": "runner.get_layers_tree.end",
-          "timestamp": "2026-08-26T00:51:23.597Z",
-          "elapsed_ms": 39.009709,
-          "delta_ms": 0.329542
+          "timestamp": "2026-08-26T02:42:27.937Z",
+          "elapsed_ms": 189.858208,
+          "delta_ms": 0.684875
         },
         {
           "step": "stats.write.start",
-          "timestamp": "2026-08-26T00:51:23.597Z",
-          "elapsed_ms": 39.09625,
-          "delta_ms": 0.086541
+          "timestamp": "2026-08-26T02:42:27.937Z",
+          "elapsed_ms": 189.959917,
+          "delta_ms": 0.101709
         }
       ],
       "breakdown_ms": {
-        "ensure_runner": 0.272583,
-        "reload_request": 29.076041,
-        "reload_runner": 28.5527499509044,
-        "reload_overhead": 0.5232910490956009,
-        "frame_request": 0.41600000000000037,
-        "geometry_request": 8.459667000000003,
-        "geometry_runner": 7.968124991748482,
-        "geometry_overhead": 0.49154200825152117,
+        "ensure_runner": 0.20104200000000003,
+        "reload_request": 43.589375,
+        "reload_runner": 43.093834014143795,
+        "reload_overhead": 0.4955409858562021,
+        "frame_request": 1.0405830000000051,
+        "geometry_request": 143.717875,
+        "geometry_runner": 140.4854590073228,
+        "geometry_overhead": 3.232415992677204,
         "stats_write": null,
         "render_dispatch": null,
         "refresh_total": null
@@ -111,7 +212,7 @@
     "perTimberMetrics": [
       {
         "timberKey": "supporting_wall_top#0",
-        "remeshDuration_ms": 3,
+        "remeshDuration_ms": 2,
         "csgDepth": 3,
         "triangleCount": 12
       },
@@ -123,9 +224,615 @@
       },
       {
         "timberKey": "supporting_roof#0",
-        "remeshDuration_ms": 2,
+        "remeshDuration_ms": 1,
         "csgDepth": 2,
         "triangleCount": 20
+      },
+      {
+        "timberKey": "cot_post_BL#0",
+        "remeshDuration_ms": 7,
+        "csgDepth": 5,
+        "triangleCount": 160
+      },
+      {
+        "timberKey": "cot_post_BR#0",
+        "remeshDuration_ms": 9,
+        "csgDepth": 5,
+        "triangleCount": 272
+      },
+      {
+        "timberKey": "cot_post_TR#0",
+        "remeshDuration_ms": 12,
+        "csgDepth": 5,
+        "triangleCount": 272
+      },
+      {
+        "timberKey": "cot_post_front_upper_left#0",
+        "remeshDuration_ms": 7,
+        "csgDepth": 5,
+        "triangleCount": 84
+      },
+      {
+        "timberKey": "cot_rim_joist_front#0",
+        "remeshDuration_ms": 7,
+        "csgDepth": 5,
+        "triangleCount": 84
+      },
+      {
+        "timberKey": "cot_rim_joist_right#0",
+        "remeshDuration_ms": 8,
+        "csgDepth": 5,
+        "triangleCount": 140
+      },
+      {
+        "timberKey": "cot_rim_joist_back#0",
+        "remeshDuration_ms": 4,
+        "csgDepth": 5,
+        "triangleCount": 48
+      },
+      {
+        "timberKey": "cot_rim_joist_left#0",
+        "remeshDuration_ms": 4,
+        "csgDepth": 5,
+        "triangleCount": 48
+      },
+      {
+        "timberKey": "cot_rail_front#0",
+        "remeshDuration_ms": 8,
+        "csgDepth": 5,
+        "triangleCount": 168
+      },
+      {
+        "timberKey": "cot_stud_front_mid#0",
+        "remeshDuration_ms": 1,
+        "csgDepth": 1,
+        "triangleCount": 12
+      },
+      {
+        "timberKey": "cot_post_door_right#0",
+        "remeshDuration_ms": 9,
+        "csgDepth": 5,
+        "triangleCount": 140
+      },
+      {
+        "timberKey": "cot_rail_right#0",
+        "remeshDuration_ms": 6,
+        "csgDepth": 5,
+        "triangleCount": 84
+      },
+      {
+        "timberKey": "cot_beam_back#0",
+        "remeshDuration_ms": 6,
+        "csgDepth": 4,
+        "triangleCount": 144
+      },
+      {
+        "timberKey": "cot_beam_front#0",
+        "remeshDuration_ms": 7,
+        "csgDepth": 4,
+        "triangleCount": 200
+      },
+      {
+        "timberKey": "cot_beam_right_side#0",
+        "remeshDuration_ms": 8,
+        "csgDepth": 5,
+        "triangleCount": 140
+      },
+      {
+        "timberKey": "cot_rafter_0#0",
+        "remeshDuration_ms": 0,
+        "csgDepth": 1,
+        "triangleCount": 12
+      },
+      {
+        "timberKey": "cot_rafter_1#0",
+        "remeshDuration_ms": 0,
+        "csgDepth": 1,
+        "triangleCount": 12
+      },
+      {
+        "timberKey": "cot_rafter_2#0",
+        "remeshDuration_ms": 0,
+        "csgDepth": 1,
+        "triangleCount": 12
+      },
+      {
+        "timberKey": "cot_rafter_3#0",
+        "remeshDuration_ms": 0,
+        "csgDepth": 1,
+        "triangleCount": 12
+      },
+      {
+        "timberKey": "cot_rafter_4#0",
+        "remeshDuration_ms": 0,
+        "csgDepth": 1,
+        "triangleCount": 12
+      },
+      {
+        "timberKey": "cot_rafter_5#0",
+        "remeshDuration_ms": 0,
+        "csgDepth": 1,
+        "triangleCount": 12
+      },
+      {
+        "timberKey": "cot_rafter_6#0",
+        "remeshDuration_ms": 0,
+        "csgDepth": 1,
+        "triangleCount": 12
+      },
+      {
+        "timberKey": "cot_floor_joist_1#0",
+        "remeshDuration_ms": 0,
+        "csgDepth": 1,
+        "triangleCount": 12
+      },
+      {
+        "timberKey": "cot_floor_joist_2#0",
+        "remeshDuration_ms": 0,
+        "csgDepth": 1,
+        "triangleCount": 12
+      },
+      {
+        "timberKey": "cot_floor_joist_3#0",
+        "remeshDuration_ms": 0,
+        "csgDepth": 1,
+        "triangleCount": 12
+      },
+      {
+        "timberKey": "bay_fl_board_0#0",
+        "remeshDuration_ms": 0,
+        "csgDepth": 1,
+        "triangleCount": 12
+      },
+      {
+        "timberKey": "bay_fl_board_1#0",
+        "remeshDuration_ms": 0,
+        "csgDepth": 1,
+        "triangleCount": 12
+      },
+      {
+        "timberKey": "bay_fl_board_2#0",
+        "remeshDuration_ms": 0,
+        "csgDepth": 1,
+        "triangleCount": 12
+      },
+      {
+        "timberKey": "bay_fl_board_3#0",
+        "remeshDuration_ms": 0,
+        "csgDepth": 1,
+        "triangleCount": 12
+      },
+      {
+        "timberKey": "bay_fl_board_4#0",
+        "remeshDuration_ms": 0,
+        "csgDepth": 1,
+        "triangleCount": 12
+      },
+      {
+        "timberKey": "bay_fl_board_5#0",
+        "remeshDuration_ms": 0,
+        "csgDepth": 1,
+        "triangleCount": 12
+      },
+      {
+        "timberKey": "bay_fr_board_0#0",
+        "remeshDuration_ms": 0,
+        "csgDepth": 1,
+        "triangleCount": 12
+      },
+      {
+        "timberKey": "bay_fr_board_1#0",
+        "remeshDuration_ms": 0,
+        "csgDepth": 1,
+        "triangleCount": 12
+      },
+      {
+        "timberKey": "bay_fr_board_2#0",
+        "remeshDuration_ms": 0,
+        "csgDepth": 1,
+        "triangleCount": 12
+      },
+      {
+        "timberKey": "bay_fr_board_3#0",
+        "remeshDuration_ms": 0,
+        "csgDepth": 1,
+        "triangleCount": 12
+      },
+      {
+        "timberKey": "bay_fr_board_4#0",
+        "remeshDuration_ms": 0,
+        "csgDepth": 1,
+        "triangleCount": 12
+      },
+      {
+        "timberKey": "bay_fr_board_5#0",
+        "remeshDuration_ms": 0,
+        "csgDepth": 1,
+        "triangleCount": 12
+      },
+      {
+        "timberKey": "bay_rb_board_0#0",
+        "remeshDuration_ms": 0,
+        "csgDepth": 1,
+        "triangleCount": 12
+      },
+      {
+        "timberKey": "bay_rb_board_1#0",
+        "remeshDuration_ms": 0,
+        "csgDepth": 1,
+        "triangleCount": 12
+      },
+      {
+        "timberKey": "bay_rb_board_2#0",
+        "remeshDuration_ms": 0,
+        "csgDepth": 1,
+        "triangleCount": 12
+      },
+      {
+        "timberKey": "bay_rb_board_3#0",
+        "remeshDuration_ms": 0,
+        "csgDepth": 1,
+        "triangleCount": 12
+      },
+      {
+        "timberKey": "bay_rb_board_4#0",
+        "remeshDuration_ms": 0,
+        "csgDepth": 1,
+        "triangleCount": 12
+      },
+      {
+        "timberKey": "bay_rb_board_5#0",
+        "remeshDuration_ms": 0,
+        "csgDepth": 1,
+        "triangleCount": 12
+      },
+      {
+        "timberKey": "cot_floor_board_bay_0_0#0",
+        "remeshDuration_ms": 0,
+        "csgDepth": 1,
+        "triangleCount": 12
+      },
+      {
+        "timberKey": "cot_floor_board_bay_0_1#0",
+        "remeshDuration_ms": 0,
+        "csgDepth": 1,
+        "triangleCount": 12
+      },
+      {
+        "timberKey": "cot_floor_board_bay_0_2#0",
+        "remeshDuration_ms": 0,
+        "csgDepth": 1,
+        "triangleCount": 12
+      },
+      {
+        "timberKey": "cot_floor_board_bay_0_3#0",
+        "remeshDuration_ms": 0,
+        "csgDepth": 1,
+        "triangleCount": 12
+      },
+      {
+        "timberKey": "cot_floor_board_bay_0_4#0",
+        "remeshDuration_ms": 0,
+        "csgDepth": 1,
+        "triangleCount": 12
+      },
+      {
+        "timberKey": "cot_floor_board_bay_0_5#0",
+        "remeshDuration_ms": 1,
+        "csgDepth": 1,
+        "triangleCount": 12
+      },
+      {
+        "timberKey": "cot_floor_board_bay_0_6#0",
+        "remeshDuration_ms": 1,
+        "csgDepth": 1,
+        "triangleCount": 12
+      },
+      {
+        "timberKey": "cot_floor_board_bay_0_7#0",
+        "remeshDuration_ms": 0,
+        "csgDepth": 1,
+        "triangleCount": 12
+      },
+      {
+        "timberKey": "cot_floor_board_bay_0_8#0",
+        "remeshDuration_ms": 0,
+        "csgDepth": 1,
+        "triangleCount": 12
+      },
+      {
+        "timberKey": "cot_floor_board_bay_0_9#0",
+        "remeshDuration_ms": 0,
+        "csgDepth": 1,
+        "triangleCount": 12
+      },
+      {
+        "timberKey": "cot_floor_board_bay_1_0#0",
+        "remeshDuration_ms": 0,
+        "csgDepth": 1,
+        "triangleCount": 12
+      },
+      {
+        "timberKey": "cot_floor_board_bay_1_1#0",
+        "remeshDuration_ms": 1,
+        "csgDepth": 1,
+        "triangleCount": 12
+      },
+      {
+        "timberKey": "cot_floor_board_bay_1_2#0",
+        "remeshDuration_ms": 0,
+        "csgDepth": 1,
+        "triangleCount": 12
+      },
+      {
+        "timberKey": "cot_floor_board_bay_1_3#0",
+        "remeshDuration_ms": 0,
+        "csgDepth": 1,
+        "triangleCount": 12
+      },
+      {
+        "timberKey": "cot_floor_board_bay_1_4#0",
+        "remeshDuration_ms": 0,
+        "csgDepth": 1,
+        "triangleCount": 12
+      },
+      {
+        "timberKey": "cot_floor_board_bay_1_5#0",
+        "remeshDuration_ms": 0,
+        "csgDepth": 1,
+        "triangleCount": 12
+      },
+      {
+        "timberKey": "cot_floor_board_bay_1_6#0",
+        "remeshDuration_ms": 0,
+        "csgDepth": 1,
+        "triangleCount": 12
+      },
+      {
+        "timberKey": "cot_floor_board_bay_1_7#0",
+        "remeshDuration_ms": 0,
+        "csgDepth": 1,
+        "triangleCount": 12
+      },
+      {
+        "timberKey": "cot_floor_board_bay_1_8#0",
+        "remeshDuration_ms": 0,
+        "csgDepth": 1,
+        "triangleCount": 12
+      },
+      {
+        "timberKey": "cot_floor_board_bay_1_9#0",
+        "remeshDuration_ms": 0,
+        "csgDepth": 1,
+        "triangleCount": 12
+      },
+      {
+        "timberKey": "cot_floor_board_bay_2_0#0",
+        "remeshDuration_ms": 0,
+        "csgDepth": 1,
+        "triangleCount": 12
+      },
+      {
+        "timberKey": "cot_floor_board_bay_2_1#0",
+        "remeshDuration_ms": 0,
+        "csgDepth": 1,
+        "triangleCount": 12
+      },
+      {
+        "timberKey": "cot_floor_board_bay_2_2#0",
+        "remeshDuration_ms": 0,
+        "csgDepth": 1,
+        "triangleCount": 12
+      },
+      {
+        "timberKey": "cot_floor_board_bay_2_3#0",
+        "remeshDuration_ms": 0,
+        "csgDepth": 1,
+        "triangleCount": 12
+      },
+      {
+        "timberKey": "cot_floor_board_bay_2_4#0",
+        "remeshDuration_ms": 0,
+        "csgDepth": 1,
+        "triangleCount": 12
+      },
+      {
+        "timberKey": "cot_floor_board_bay_2_5#0",
+        "remeshDuration_ms": 0,
+        "csgDepth": 1,
+        "triangleCount": 12
+      },
+      {
+        "timberKey": "cot_floor_board_bay_2_6#0",
+        "remeshDuration_ms": 0,
+        "csgDepth": 1,
+        "triangleCount": 12
+      },
+      {
+        "timberKey": "cot_floor_board_bay_2_7#0",
+        "remeshDuration_ms": 0,
+        "csgDepth": 1,
+        "triangleCount": 12
+      },
+      {
+        "timberKey": "cot_floor_board_bay_2_8#0",
+        "remeshDuration_ms": 0,
+        "csgDepth": 1,
+        "triangleCount": 12
+      },
+      {
+        "timberKey": "cot_floor_board_bay_2_9#0",
+        "remeshDuration_ms": 0,
+        "csgDepth": 1,
+        "triangleCount": 12
+      },
+      {
+        "timberKey": "cot_floor_board_bay_3_0#0",
+        "remeshDuration_ms": 0,
+        "csgDepth": 1,
+        "triangleCount": 12
+      },
+      {
+        "timberKey": "cot_floor_board_bay_3_1#0",
+        "remeshDuration_ms": 0,
+        "csgDepth": 1,
+        "triangleCount": 12
+      },
+      {
+        "timberKey": "cot_floor_board_bay_3_2#0",
+        "remeshDuration_ms": 0,
+        "csgDepth": 1,
+        "triangleCount": 12
+      },
+      {
+        "timberKey": "cot_floor_board_bay_3_3#0",
+        "remeshDuration_ms": 0,
+        "csgDepth": 1,
+        "triangleCount": 12
+      },
+      {
+        "timberKey": "cot_floor_board_bay_3_4#0",
+        "remeshDuration_ms": 0,
+        "csgDepth": 1,
+        "triangleCount": 12
+      },
+      {
+        "timberKey": "cot_floor_board_bay_3_5#0",
+        "remeshDuration_ms": 0,
+        "csgDepth": 1,
+        "triangleCount": 12
+      },
+      {
+        "timberKey": "cot_floor_board_bay_3_6#0",
+        "remeshDuration_ms": 0,
+        "csgDepth": 1,
+        "triangleCount": 12
+      },
+      {
+        "timberKey": "cot_floor_board_bay_3_7#0",
+        "remeshDuration_ms": 0,
+        "csgDepth": 1,
+        "triangleCount": 12
+      },
+      {
+        "timberKey": "cot_floor_board_bay_3_8#0",
+        "remeshDuration_ms": 0,
+        "csgDepth": 1,
+        "triangleCount": 12
+      },
+      {
+        "timberKey": "cot_floor_board_bay_3_9#0",
+        "remeshDuration_ms": 0,
+        "csgDepth": 1,
+        "triangleCount": 12
+      },
+      {
+        "timberKey": "accessory:Peg#0",
+        "remeshDuration_ms": 0,
+        "csgDepth": 1,
+        "triangleCount": 12
+      },
+      {
+        "timberKey": "accessory:Peg#1",
+        "remeshDuration_ms": 0,
+        "csgDepth": 1,
+        "triangleCount": 12
+      },
+      {
+        "timberKey": "accessory:Peg#2",
+        "remeshDuration_ms": 0,
+        "csgDepth": 1,
+        "triangleCount": 12
+      },
+      {
+        "timberKey": "accessory:Peg#3",
+        "remeshDuration_ms": 0,
+        "csgDepth": 1,
+        "triangleCount": 12
+      },
+      {
+        "timberKey": "accessory:Peg#4",
+        "remeshDuration_ms": 0,
+        "csgDepth": 1,
+        "triangleCount": 12
+      },
+      {
+        "timberKey": "accessory:Peg#5",
+        "remeshDuration_ms": 0,
+        "csgDepth": 1,
+        "triangleCount": 12
+      },
+      {
+        "timberKey": "accessory:Peg#6",
+        "remeshDuration_ms": 0,
+        "csgDepth": 1,
+        "triangleCount": 12
+      },
+      {
+        "timberKey": "accessory:Peg#7",
+        "remeshDuration_ms": 0,
+        "csgDepth": 1,
+        "triangleCount": 12
+      },
+      {
+        "timberKey": "accessory:Peg#8",
+        "remeshDuration_ms": 0,
+        "csgDepth": 1,
+        "triangleCount": 12
+      },
+      {
+        "timberKey": "accessory:Peg#9",
+        "remeshDuration_ms": 0,
+        "csgDepth": 1,
+        "triangleCount": 12
+      },
+      {
+        "timberKey": "accessory:Peg#10",
+        "remeshDuration_ms": 0,
+        "csgDepth": 1,
+        "triangleCount": 12
+      },
+      {
+        "timberKey": "accessory:Peg#11",
+        "remeshDuration_ms": 0,
+        "csgDepth": 1,
+        "triangleCount": 12
+      },
+      {
+        "timberKey": "accessory:Peg#12",
+        "remeshDuration_ms": 0,
+        "csgDepth": 1,
+        "triangleCount": 12
+      },
+      {
+        "timberKey": "accessory:Peg#13",
+        "remeshDuration_ms": 0,
+        "csgDepth": 1,
+        "triangleCount": 12
+      },
+      {
+        "timberKey": "accessory:Peg#14",
+        "remeshDuration_ms": 0,
+        "csgDepth": 1,
+        "triangleCount": 12
+      },
+      {
+        "timberKey": "accessory:Peg#15",
+        "remeshDuration_ms": 0,
+        "csgDepth": 1,
+        "triangleCount": 12
+      },
+      {
+        "timberKey": "accessory:Peg#16",
+        "remeshDuration_ms": 0,
+        "csgDepth": 1,
+        "triangleCount": 12
+      },
+      {
+        "timberKey": "accessory:Peg#17",
+        "remeshDuration_ms": 0,
+        "csgDepth": 1,
+        "triangleCount": 12
       }
     ]
   }

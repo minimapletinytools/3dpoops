@@ -91,7 +91,7 @@
 ---
 
 ## 8. Conversation Log Setup
-> **"btw, before we go on, can you start cat_corner_cot_conversation_log.txt file that tracks all of my queries. DO NOT put your responses in there. just provide super brief summary of what got added after each of my prompts. the main focus should be my prompts. acutally amke it markdown format, so thta my prompts are more emphasized and your summarized responses are in smaller text."**
+> **"btw, before we go on, can you start cat_corner_cot_conversation_log.txt file that tracks all of my queries. DO NOT put your responses in there. just provide super brief summary of what got added after each of my prompts. the main focus should be my prompts. acutally amke it markdown format, so thta my prompts are more emphasized and your responses are in smaller text."**
 
 <small>
 
@@ -273,5 +273,69 @@
 - Created 3 3/8" square right side tie beam (`cot_beam_right_side`) connecting post BR to post TR along the right wall at $Z_{\text{top}} = \text{front\_beam\_height} - 4" \approx 105.934"$.
 - Added mortise and tenon joints with $5/8"$ square draw-bored pegs connecting both ends of the side beam to post BR ($3" \times 1"$ tenon) and post TR ($3" \times 1"$ tenon).
 - Terminated the right mid door post at the side beam underside ($Z \approx 102.559"$) and connected it into the side beam with a $1.5" \times 1"$ mortise and tenon joint with a $5/8"$ square peg.
+
+</small>
+
+---
+
+## 23. Roof Rafters & Recessed Housing Joints
+> **"ok commit changes, then add 7 rafters on the top plates evenly space. the rafters sholud be 1.5x1 and be positioned such taht they are recessed into the plates by .75 inches. they 1.5 inch dimension is in the Z axis."**
+
+<small>
+
+- Staged and committed side tie beam changes to git (commit `d32fd20`).
+- Defined `cot_num_rafters = 7` with cross-section $1"$ wide ($X$) $\times 1.5"$ tall in $Z$.
+- Created 7 evenly spaced rafters sloping at $20^\circ$ across the front and back roof plates.
+- Recessed rafters by $0.75"$ into the plates using `cut_rafter_housing_joints()` to cut matching housing notches in `cot_beam_front` and `cot_beam_back`.
+
+</small>
+
+---
+
+## 24. Front Rafter Overhang Extension
+> **"extend the rafters beyond the front plate by 12\""**
+
+<small>
+
+- Defined `cot_rafter_overhang_front = inches(12)`.
+- Extended the 7 rafters $12"$ past the front plate along the $20^\circ$ roof slope ($Y_{\text{start}} = -76.5"$, length increased to $\approx 80.88"$).
+
+</small>
+
+---
+
+## 25. Resize Rafters to 2.5" x 1.5" & Lift 1/2" Higher
+> **"also lift the rafters by like 1/2\" higher they are too low right now
+umm lastly make the rafters 2.5\" by 1.5\""**
+
+<small>
+
+- Resized rafter cross section to $1.5"$ wide ($X$) $\times 2.5"$ tall ($Z$).
+- Lifted rafters $0.5"$ higher by reducing plate recess to $0.25"$ (`cot_rafter_recess = inches(1, 4)`), leaving $2.25"$ of rafter standing above the plates.
+
+</small>
+
+---
+
+## 26. Dynamic Floor Boards Between Joists
+> **"ok final thing, fill the spaces betwene the joists with floor boards, the boards should be flush with the front and back rim josits and then extend into the floor joists by 1/2\", they should be 3-6\" wide. do it similar to the boards on the front and side so I can adjust the size and numebr of joists without needing ot adjust them."**
+
+<small>
+
+- Created `create_cot_floor_boards()` helper function dynamically calculating floor bay boundaries between the rim joists and floor joists.
+- Arrayed $3/4"$ thick floor boards with $5.725"$ face width (dynamically sized between 3" and 6") flush against front and back rim joists ($Y \in [-61.125", -3.875"]$).
+- Applied $1/2"$ penetration into bounding floor joists and rim joists along $X$.
+
+</small>
+
+---
+
+## 27. Middle Door Post to Right Rim Joist Mortise & Tenon Joint
+> **"also another hting, the middle post needs to jointwiththe righ rim josit with a mortise and tenon joint"**
+
+<small>
+
+- Positioned the right door post to start on top of the right rim joist at floor height ($Z = 16"$).
+- Added a mortise and tenon joint with a $1.5" \times 1"$ tenon and $5/8"$ square draw-bored peg connecting the bottom of `cot_post_door_right` into the top face of `cot_rim_joist_right`.
 
 </small>
