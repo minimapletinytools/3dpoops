@@ -55,61 +55,49 @@ from build123d import (
 # Parameters (mm)
 # ---------------------------------------------------------------------------
 
-wall_t = 5.76  # wall / rim thickness throughout (1.2x thicker again)
+wall_t = 6.0  # wall / rim thickness throughout
 
-base_h = 3.0  # solid base thickness under the food well floor
+base_h = 5.0  # solid base thickness under the food well floor
 
-food_top_r = 31.7  # radius of the food well (shrunk so overall diameter is ~80%)
-food_rim_z = 28.0  # height of the food well's rim (top of inner wall) - much taller
-# -> food well depth = food_rim_z - base_h = 25 mm
+food_top_r = 60.0  # radius of the food well (diameter = 144 mm, ~2x wider)
+food_rim_z = 56.0  # height of the food well's rim (top of inner wall) - 2x taller (was 28.0)
+# -> food well depth = food_rim_z - base_h = 51 mm
 
-moat_width = 10.0  # radial width of the water moat channel
-moat_floor_z = 9.0  # height of the moat floor above the table
-# -> moat holds water up to (min(food_rim_z, outer_rim_z) - moat_floor_z) deep
-#    before it spills
+moat_width = 13.0  # radial width of the water moat channel (2x wider, was 10.0)
+moat_floor_z = 18.0  # height of the moat floor above the table (2x taller, was 9.0)
+# -> moat holds water up to (min(food_rim_z, outer_rim_z) - moat_floor_z) = 24 mm deep
+#    before it spills (2x deeper)
 
-moat_inner_r = food_top_r + wall_t
-moat_outer_r = moat_inner_r + moat_width
-bowl_outer_r = moat_outer_r + wall_t
+moat_inner_r = food_top_r + wall_t  # 78.0 mm
+moat_outer_r = moat_inner_r + moat_width  # 98.0 mm
+bowl_outer_r = moat_outer_r + wall_t  # 104.0 mm -> outer diameter = 208.0 mm (~2x wider)
 
-outer_rim_z = 21.0  # outer rim height - deliberately lower than the food rim
-# (0.7x of the previous 30 mm outer rim), so it's now the shorter of the two
-# rims; overflow spills outward off the table rather than into the food
+outer_rim_z = 42.0  # outer rim height - 2x taller (was 21.0 mm), lower than food rim
+# overflow spills outward off the table rather than into the food
 
-rim_fillet = 1.6  # rounds the touch-edges (food rim + outer rim) for comfort/cleaning
-inner_bottom_fillet = 4.0  # rounds the INSIDE corner (food well floor -> inner wall)
-outer_bottom_chamfer = 4.5  # 45-degree chamfer on the OUTSIDE bottom corner - a fillet
-# there prints badly (its tangent point is a horizontal, unsupported overhang); a
-# constant-angle chamfer is self-supporting
+rim_fillet = 2.0  # rounds the touch-edges (food rim + outer rim) for comfort/cleaning
+inner_bottom_fillet = 8.0  # rounds the INSIDE corner (food well floor -> inner wall)
+outer_bottom_chamfer = 6.0  # 45-degree chamfer on the OUTSIDE bottom corner for clean 3D printing
 
 # Feet (Voronoi islands extruded downward from the bottom, z = 0)
-foot_depth = 3.0  # mm, extrude distance
+foot_depth = 3.5  # mm, extrude distance
 foot_taper_deg = 10.0  # inward taper (draft) angle
-foot_region_r = bowl_outer_r - outer_bottom_chamfer  # bleed to the edge of the flat
-# part of the bottom (beyond this the profile chamfers up into the outer wall, so
-# feet placed there would float unsupported)
-foot_gap = 0.9  # mm gap carved between neighboring feet
-foot_count = 144  # ~3x denser again (9x the original density)
+foot_region_r = bowl_outer_r - outer_bottom_chamfer  # bleed to the edge of the flat bottom
+foot_gap = 1.2  # mm gap carved between neighboring feet
+foot_count = 180  # scaled for the larger base area
 foot_seed = 7
-foot_min_area = 5.0  # discard slivers smaller than this (mm^2)
+foot_min_area = 8.0  # discard slivers smaller than this (mm^2)
 
 # Soft Voronoi bumps decorating the outer wall. Each bump is a spherical cap
 # (not a hard-edged boss) so its overhang angle tapers gently to zero at the
 # wall instead of jumping straight to a 90-degree unsupported ledge.
-wall_bump_protrusion = 1.4  # mm the bump pokes out past the wall - kept shallow/soft
-wall_bump_min_r = 2.0  # mm, smallest bump footprint radius - kept comfortably above
-# wall_bump_protrusion so every sphere is solidly embedded in the wall (a radius too
-# close to the protrusion leaves it barely attached, which OCCT's boolean solver
-# can turn into a degenerate sliver instead of a clean union)
-wall_bump_max_r = 2.6  # mm, largest bump footprint radius (also caps how deep the
-# sphere reaches back into the wall: stay well under wall_t so it can't poke
-# through into the moat)
-wall_bump_fill_scale = 0.8  # shrinks each cell's equivalent radius, leaving gaps
-# between bumps so they read as distinct soft dots rather than a fused blob
-wall_bump_count = 130
+wall_bump_protrusion = 1.6  # mm the bump pokes out past the wall
+wall_bump_min_r = 2.4  # mm, smallest bump footprint radius
+wall_bump_max_r = 3.2  # mm, largest bump footprint radius (capped well under wall_t)
+wall_bump_fill_scale = 0.8  # shrinks each cell's equivalent radius
+wall_bump_count = 200
 wall_bump_seed = 11
-wall_bump_margin = wall_bump_max_r + 0.6  # keep bump centers (and their radius) clear
-# of the bottom chamfer and top rim fillet, both of which are curved transitions
+wall_bump_margin = wall_bump_max_r + 0.8  # keep clear of bottom chamfer and top fillet
 wall_band_bottom = outer_bottom_chamfer + wall_bump_margin
 wall_band_top = (outer_rim_z - rim_fillet) - wall_bump_margin
 
@@ -180,7 +168,8 @@ def voronoi_foot_polygons(
     eroded apart so each cell becomes a standalone island."""
 
     rng = np.random.default_rng(seed)
-    min_sep = radius * 0.10
+    approx_spacing = np.sqrt(np.pi * radius**2 / n_points)
+    min_sep = approx_spacing * 0.60
 
     pts: list[tuple[float, float]] = []
     attempts = 0
@@ -363,7 +352,10 @@ def main() -> None:
     export_step(part, "antmoat_catbowl.step")
     print("Exported antmoat_catbowl.stl and antmoat_catbowl.step")
 
-    show(part)
+    try:
+        show(part)
+    except Exception:
+        pass
 
 
 if __name__ == "__main__":
