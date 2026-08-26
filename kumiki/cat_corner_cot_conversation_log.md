@@ -241,8 +241,37 @@
 
 <small>
 
+- Staged and committed previous changes to git (commit `044b1d2`).
 - Added `cut_rail_joints()` joining front rail to BR post ($3" \times 1"$ tenon) and right rail to door post and TR post ($3" \times 1"$ tenons).
 - Terminated BL post at rail underside ($Z = 50\frac{5}{8}"$) and connected top of BL post into bottom of front rail with a $1.5" \times 1"$ tenon offset $+9/16"$ inward to preserve $1.5"$ of end-grain relish and prevent blowout.
 - Fastened all rail joints with $5/8"$ square draw-bored pegs.
+
+</small>
+
+---
+
+## 21. Upper Post & Beam Mortise & Tenon Joints
+> **"great, commit changes, next, you're going to place a post between the front rail and the top beam on the left side. the post should be offset awa yfrom the wall by 1.5\". then connect the post to the rail and the beam with mortise and tenon joint, again the bottom one needs to be 1.5\" and offset to the right so it doesn't intersect with the one betwene the bottom post and the rail. connect the other posts to the beams  with mortise and tenon joints as well."**
+
+<small>
+
+- Created upper front-left post (`cot_post_front_upper_left`) between front rail top ($Z = 54"$) and front beam bottom ($Z \approx 106.559"$), offset $1.5"$ from the house wall.
+- Added bottom mortise and tenon joint into front rail with $1.5" \times 1"$ tenon offset $+15/16"$ to the right, preventing intersection inside the rail with the lower BL post tenon.
+- Added top mortise and tenon joint into front beam ($1.5" \times 1"$ tenon, centered).
+- Connected BR post top into front beam underside ($1.5" \times 1"$ tenon) and TR post top into back beam underside ($1.5" \times 1"$ tenon).
+- Fastened all new beam and post joints with $5/8"$ square draw-bored pegs.
+
+</small>
+
+---
+
+## 22. Right Side Tie Beam & Joints
+> **"ok... lets connect the front post to the back post with another beam. it should be place just below the top plate on the front side (lets say 4 inches below the top of the top plate) then connect this beam to the front and back posts with mortise and tenon joints, then connect the mid post into the beam with a mrotise and tenon joint."**
+
+<small>
+
+- Created 3 3/8" square right side tie beam (`cot_beam_right_side`) connecting post BR to post TR along the right wall at $Z_{\text{top}} = \text{front\_beam\_height} - 4" \approx 105.934"$.
+- Added mortise and tenon joints with $5/8"$ square draw-bored pegs connecting both ends of the side beam to post BR ($3" \times 1"$ tenon) and post TR ($3" \times 1"$ tenon).
+- Terminated the right mid door post at the side beam underside ($Z \approx 102.559"$) and connected it into the side beam with a $1.5" \times 1"$ mortise and tenon joint with a $5/8"$ square peg.
 
 </small>
