@@ -1,0 +1,8 @@
+schema_version: 1
+project_root: '/Users/giraffe/kitchen/faucet/3dpoops/kumiki'
+python_path: '/Users/giraffe/kitchen/faucet/3dpoops/kumiki/.venv/bin/python3'
+venv_path: '/Users/giraffe/kitchen/faucet/3dpoops/kumiki/.venv'
+local_dev: false
+last_setup_at: '2026-08-26T00:38:42.455Z'
+created_venv: false
+installed_viewer_deps: false

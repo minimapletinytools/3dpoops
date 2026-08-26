@@ -1,0 +1,333 @@
+# Kumiki Usage Instructions
+
+## Background
+
+When starting work in a workspace, if in dout, run the **`init-kumiki-project`** skill (`docs/skills/init-kumiki-project/SKILL.md`).
+
+## General Usage Pattern *START HERE*
+
+Unless the user is specific about what they want, always follow the following implementation pattern:
+
+- for structures, define a `Footprint` for the whole structure
+- create initial timbers by placing posts vertically on the footprint or place mudsilles horizontally on the footprint
+- for timbers spanning between existing timbers always use the join_timbers method
+- only create timbers manually if the above methods are insufficient
+- at this point, you can show the user the design and confirm it's what they are looking for
+- once all timbers are in place, create joints binding everything together
+- iterate with the user until they are satisfied
+
+
+In addition, validate changes you make:
+
+- run the frame code using python to ensure there are no errors
+- use command `kigumi.automationOpenFileInViewer` with `filePath: "/absolute/path/to/frame.py"` to reload the frame after making changes
+- use command `kigumi.automationReadSessionLogs` to get logs filtering for errors and warnings to validate your changes
+- use command `kigumi.captureScreenshot` to get a screenshot of the rendered frame
+
+## Developing a Shared Concept Design Language with the User
+
+Once again, review docs/concepts.md to understand the core concepts of Kumiki, this will help tremendously when implementing Kumiki designs.
+
+The user will NOT be familiar with all the concepts, you may need to educate the user.
+
+### ORIENTATION IMPORTANT
+
+When the user instructs you, they may reference features, for example, they may request: "make the front face of the timber wider".
+
+In these cases "front" may have many interpretations, for example:
+
+- the local FRONT face of the timber
+- the face aligning most closely with the global FRONT direction
+- the face aligning most closely with whatever direction the user happens to be looking at the frame from
+- the face aligning with the "front" feature of the structure
+- the face aliginging with the outside of the structure relative to its footprint
+- some other interpretation
+
+In all cases, make your best interpretation based on the context of the request as well as previous requests.
+If in doubt, ask the user to clarify.
+You can always instruct the user to click on the feature they are referring to in the kigumi viewer and read off what its label is so that they can give you an unambiguous local feature of the timber.
+
+
+## Imports
+
+Import via the top-level `kumiki` module:
+```python
+from kumiki import *
+```
+
+## Numeric Values
+
+- **Always use rule types (rule.py) -- never Python floats.**
+- Use the `inches()` and `feet()` helpers for imperial measurements:
+  ```python
+  inches(3)               # 3 inches
+  inches(3, 2)            # 3/2 inches = 1.5"
+  feet(7, 2)    # 3.5 feet
+  scalar(7,2)           # 3.5
+  scalar(3.5)           # also OK
+  ```
+- Use `mm()`, `cm()` and `m()` for metric
+- Use `degrees()` and `radians()` for angles
+- Use `Matrix([...])` for vectors, always with `scalar` values
+
+## Creating Timbers
+
+Timbers for a typical structure are usually defined
+
+- first create a `Footprint` for the footprint of the structure
+- then use methods in `footprint.py` to define timbers directly on the footprint (touching the ground)
+    - `create_horizontal_timber_on_footprint`
+    - `create_vertical_timber_on_footprint`
+    - placing on the inside of the footprint should be the default behavior
+- use methods in `construction.py` to define remaining timbers based on existing timbers
+    - `join_face_aligned_on_face_aligned_timbers` for connecting timbers at right angles
+    - `join_timbers` for simple connections between two timbers
+    - `create_axis_aligned_timber` for timbers aligned to cartesian axis
+    - `create_timber` for arbitrarily aligned timbers
+
+## Cutting Joints
+
+Once timbers have been laid out, use the various `cut_*` methods to cut joints joining the timbers. There are many types of joints.
+
+Most plain joints have a `cut_basic_plain_*` variation inside of basic_joints.py which take minimal parameters. Always use the basic variants until the user provides specific requirements.
+
+### finding joint parameters
+
+Joint parameters are always set relative to one of the features on one of the timbers in the arrangement. Oftentimes the user will want to set the parameter relative to some other feature. Use the methods in measuring.py to convert measurements between features.
+
+### default joints for generic designs
+
+If the user does not specify which joint, use the following (or one of its variants) as defaults:
+
+- for butt joints use cut_basic_mortise_and_tenon_joint_on_face_aligned_timbers
+- for corner joints use cut_basic_plain_miter_joint or cut_plain_corner_lap_joint_on_plane_aligned_timbers
+- for splice joint use cut_basic_plain_splice_lap_joint_on_aligned_timbers
+- for cross joints use cut_basic_plain_cross_lap_joint_on_face_aligned_timbers
+
+The basic variants of all joints provide sensible defaults for most parameters. If there are specific needs that aren't met by the defaults, use the non basic variants next, and then finally explore using other joints all together.
+
+### default joints for timber frames
+
+- for beam-to-post joints use cut_mortise_and_tenon_joint, with a peg if the beam butts into the post, and without a peg if the beam sits above the post
+- for tie-beams or beams under substantial loads, consider using cut_wedged_half_dovetail_mortise_and_tenon_joint_on_face_aligned_timbers instead as it's much stronger
+- for rafter-to-rafter joints use cut_tongue_and_fork_corner_joint_on_plane_aligned_timbers
+- for mudsill splice joints use cut_lapped_gooseneck_joint_on_aligned_timbers with the gooseneck facing upwards
+- for mudsill corner joints use either
+    - cut_plain_corner_lap_joint_on_plane_aligned_timbers (simplest)
+    - cut_mortise_and_tenon_joint (more complicated)
+    - cut_mitered_and_keyed_lap_joint_on_plane_aligned_timbers (most complicated, no end grain exposed)
+- for joist-to-beam or joist-to-mudsill joints use
+    - cut_dropin_housed_butt_joint_on_face_aligned_timbers (simplest)
+    - cut_dropin_dovetail_butt_joint_on_face_aligned_timbers (if joist needs to resist spreading forces)
+
+## Combining everything into a Frame
+
+Your file should typically have some `example` function that returns a Frame. The function must be explicity typed to return type `Frame` in order for it be to picked up by the project scanner.
+
+Use `Frame.from_joints` to merge cuts on shared timbers across multiple joints.
+
+```python
+def example() -> Frame:
+    # establish footprint
+    # create timbers
+    # create joints
+    # merge into a frame and return the results
+    return Frame.from_joints([joint1, joint2, joint3], name="my_frame")
+```
+
+The `example` function name is special, it is what kigumi will scan for and render when opening your file.
+
+Supported arguments types added to the `example` function will be displayed in the parametrization section in Kigumi. However remember that since the update flow is agentic, having constants in the example file is often better. All arguments to the `example` function must have default values.
+
+# Code Style Guide
+
+## give timbers descriptive names
+
+Timbers should have descriptive names, typically identifying their purpose and location. Use N/S/W/E convention for location when appropriate, for example "corner_post_NW".
+
+## optionally tag timbers into groups
+
+Timbers can be tagged through their ticket. Timbers on structures often come in sets which share common poperties and each such set should have a tag. For example "posts" "rafter" "corner post" "mudsill" "girt" etc. 
+
+## define varibales for lumber sizes
+
+Avoid inline sizes for timber dimensions. Even if the timber is only used once. Create a clearly variable based on the timber name or tag to define the timber size. 
+Joint configuration paraemters can be inlined if they are used only once. If they are shared across several joints, make them into a variable. 
+
+### be mindful of nominal lumber sizes
+
+Lumber sizes are often specified in nominal dimensions and not their actual dimensions. This will often be the case for standard dimension construction lumber. For example, if the author says "2x4", they are most likely referring to a nominal 2x4 timber which is in actuality closer to 1.5" x 3.5". In general, reduce both nominoal dimension by 0.5" for standard construction lumber to get their acutal dimensions. To make matters a little more confusing, we have the concept of "rough" dimensions in kumiki, which allows the actual dimension of the lumber to be larger than the perfect timber within dimension of the lumber from which all measurements are made. By default, make all timbers perfect (rough and perfect dimensions are the same) unless the users asks otherwise. 
+
+# Validation Workflow
+
+When authoring a frame for the user, always test locally first just by running the python script directly to confirm there are no errors and the logging looks accurate. There are several additional ways you can test and validate the output
+
+## Headlessly using Kumiki
+
+The Kumiki project will output a Frame object. You can then introspect this Frame object to see its contents and validate it based on this. Please do not hesitate to write small validation scripts in python to do this.
+
+In addition, Kumiki ships with a headless rendering utility (`kumiki.kigumi_at_home`) allowing you to take screenshots of the frame directly, without needing the Kigumi VS Code viewer or any VS Code commands at all:
+
+```python
+from kumiki.kigumi_at_home import render_frame_to_png
+
+render_frame_to_png(frame, "/tmp/my_frame.png")
+```
+
+By default this renders the whole frame from a 3/4 isometric angle, auto-framed to fit. Useful options:
+
+- `camera_angle=CameraAngle.TOP` (also FRONT/BACK/LEFT/RIGHT/BOTTOM/ISO_*) for a fixed view
+- `focus_timbers=[some_cut_timber, ...]` to zoom the camera onto specific timbers only (pass either `CutTimber` objects or their `.timber.ticket.kumiki_id`); use `unfocused_style=UnfocusedStyle.GHOSTED` to keep the rest faintly visible for context instead of hiding it
+- `render_mode=RenderMode.BOUNDING_BOX` for a fast approximate render instead of the fully-cut geometry
+- `geometry_style=GeometryStyle.NONE, show_edges=True` for a wireframe-only (hidden-line) render
+
+By default this uses `render_backend=RenderBackend.MATPLOTLIB` (requires `pip install kumiki[render-matplotlib]`), which never opens a window and can be called as many times as you like in the same process. There's also `render_backend=RenderBackend.TRIMESH_PYGLET` (requires `pip install kumiki[render]`), which is correctly z-buffered but opens a real window and is only reliable for the *first* render call in a process on macOS (see the module docstring for why) -- if you use that backend and need several renders in one session, invoke this function from a fresh `python3` subprocess each time rather than calling it repeatedly in a long-lived process.
+
+After taking a screenshot, alwasy make sure to show it to the user in the agent chat window so the user can see your progress.
+
+## Using VS Code Commands for Full Agentic Development Loop (only if you have access to VSCode commands, which you most likely don't)
+
+Use this sequence after headless local validation passes.
+
+1. Open the frame in viewer
+    - Command Palette: `Kigumi: Open Current File In Viewer`
+    - Command id: `kigumi.openCurrentFileInViewer`
+2. Open Kigumi explorer (optional but useful for pattern workflows)
+    - Command Palette: `Kigumi: Open Explorer`
+    - Command id: `kigumi.explorer`
+3. Toggle auto refresh on file change as needed for the current task
+    - Command Palette: `Kigumi: Toggle Auto Refresh On File Change`
+    - Command id: `kigumi.toggleAutoRefreshOnFileChange`
+
+For automation-driven checks (agent/testing flows), call these command ids directly:
+
+1. Open a specific file in viewer: `kigumi.automationOpenFileInViewer` (with `filePath`)
+2. List active sessions: `kigumi.automationListSessions`
+3. Refresh a specific session: `kigumi.automationRefreshSession`
+4. Read disk-backed JSONL logs: `kigumi.automationReadSessionLogs`
+5. Read camera state: `kigumi.automationGetCameraState`
+6. Set camera state: `kigumi.automationSetCameraState`
+7. Capture 3D viewport screenshot: `kigumi.captureScreenshot`
+
+Expected artifacts from the automated loop:
+
+- Session logs in `.kigumi/logs/*.jsonl`
+- Screenshots in `.kigumi/automation/`
+
+Common automation loop example:
+
+1. `kigumi.automationOpenFileInViewer` with `filePath: "/absolute/path/to/frame.py"`
+2. `kigumi.automationListSessions`
+3. `kigumi.automationRefreshSession` with `dirtyOnce: true`
+4. `kigumi.automationReadSessionLogs` filtering for warnings/errors
+5. `kigumi.automationGetCameraState`
+6. `kigumi.captureScreenshot`
+
+# Updating Kumiki
+
+Breaking API changes should always be accompanied by a minor version bump, however patch version bumps my introduce breaking behavior changes. In any case, refer to the [CHANGELOG.md](https://github.com/minimapletinytools/kumiki/blob/main/CHANGELOG.md) to see what breaking changes were introduced and fix accordingly. There may also be API deprecations. If deprecated API usage is detected, always update to the suggested new API.
+
+# Common Design Patterns
+
+## locating (measuring) and marking
+
+Use methods in measuring.py to convert "locations" measured relative from one timber into "markings" on another timber which can then return measurements relative to any feature of that timber.
+This is very useful as many functions take input parameters in local space of one timber, but we may want to take those measurements from another timber.
+
+## splicing patterns
+
+When members exceed a certain length it may be desireable to splice the member for the following reasons:
+
+- very long timbers are harder to work with physically
+- warping is more pronounced on very long timbers
+- it is harder to source very long timbers
+
+In these case, a splice joint is used. There are many types of splice joints. You will choose which splice joint to use based on the following:
+
+- directional load requirements of the joint
+- which direction the spliced timber will be typically seen from in the structure
+- size of the timber being joined
+- desired difficulty and complexity of the joint
+
+Here are some typical guidelines:
+
+- for mudsills which are usually bolted to the foundation and experience no loads except during disaster scenarios
+    - use `cut_plain_splice_lap_joint_on_aligned_timbers` for simple construction
+    - use `cut_lapped_gooseneck_joint_on_aligned_timbers` for premium construction
+    - you can even use `cut_plain_butt_splice_joint_on_aligned_timbers` 🫠
+- use `cut_plain_butt_splice_joint_on_aligned_timbers` as a placeholder in other scenarios until more splice joint types are added
+    - otherwise never use `cut_plain_butt_splice_joint_on_aligned_timbers` as it resists no loads whatsoever
+
+## mortise and tenon joint patterns
+
+### tenon sizing
+
+As a general rule of thumb, the tenon should be 1/3 the width of the face its entering into in the mortise timber. Specifically, the tenon width and the width of wood housing on either side of the mortise hole should be similar in width. 
+
+Thus, when butting a smaller timber into a larger one, you may want to do a "barefaced" tenon, where one side of the tenon is flush with one face of the tenon timber. Just make sure the side of the timber it is flush with is the side closer to the center of the mortise timber.
+
+The height (the axis that aligns with the length axis of the mortise timber) should be slightly less than the height or width (depending on orientation) of the tenon timber. Bigger tenons are stronger and making it slightly smaller creates a nice lip on the shoulder that looks nicer. 
+
+### tenon positioning
+
+Although tenon position argument is specified in the tenon timber's local coordinates, it is often desireable to position the tenon in the mortise timbers coordinate as the positioning of the mortise hole is more structurally impactful. In general
+
+1. if the tenon timber is roughly in the middle (in both length and width) of the mortise timber, just set the tenon to be located at 0,0 for simplicity
+2. if the tenon is off to the side width wise (as in, in the orthogonal direction to centerline of the mortise timber), locate the tenon to be at the centerline of the mortise timber 
+3. if teh tenon is off to the end of the mortise timber, locate the tenon as far away from the end as possible to prevent the mortise from blowing out at the end
+
+If you need to position the mortise from a long face of the mortise timber, you can using measuring.py to locate a distance away from the long face (locate_into_face) on the mortise timber and then mark it onto the tenon timber (mark_plane_from_edge_in_direction) which can then be used to get the relative measurement needed by the joint function.
+
+### double, triple and quadruple mortise and tenon joints
+
+A mortise timber may have several mortise and tenon joints coming into it from different faces. We need to be careful so that the tenon geometry does not intersect in the timber. There are a few ways to deal with this:
+
+- Sometimes, there is enough space to offset the tenons in the length axis of the mortise timber to prevent them from intersecting
+- You can make the tenon shorter so that they don't intersect, but there may not be enough space for pegs in this case
+- You can use specialized double/triple/quadruple butt joints that are designed specifically for this purpose, but these joints are more complicated
+
+## structure patterns
+
+### posts on mudsills
+
+A very common pattern for a timber framed structure is to lay out mudsills on the perimeter of the footprint with posts on top. See `examples/oscarshed.py` for a structure built witth this pattern.
+
+Posts in the middle of mudsills are joined with mortise and tenon joints without pegs, the tenon size must be longer in the length direction of the mudsill and typically 1/3rd the width of the mudsill in the other dimension.
+
+For posts on top of a corner joint, you have a few options:
+
+- rather than place posts directly on the corner, move them inwards a little bit so there is more space to cut joiner (this is what we did in oscarshed)
+- use a 3 way corner joint (currently none exist)
+
+
+### posts on ground with floor beams into posts
+
+A less common and more complex pattern is to have posts directly touching the ground as if the house is on stilts. See `examples/tinyhouse120.py` for an example of this pattern
+
+Floor beams connecting into corner posts can be joined with mortise and tenon joints, offsetting the tennons on each beam by a bit so that they do not intersect each other (this is what we did in tinyhouse120)
+
+For beams connecting into non-corner posts, you have a few options:
+
+- let the beam be continuous and split the post in two connecting to the floating floor beam with mortise and tenon joints such that there is a tiny stub post below the beam to support it from below
+- use something like the `cut_splined_opposing_double_butt_joint_on_face_aligned_timbers` (complex) (this is what we did in tinyhouse120)
+
+### girts between vertical members
+
+`examples/tinyhouse120.py` uses this pattern
+
+### top plates on posts
+
+`examples/tinyhouse120.py` and `examples/oscarshed.py` use this pattern
+
+### studs go between horizontal members
+
+TODO 
+`examples/tinyhouse120.py` and `examples/oscarshed.py` use this pattern
+
+### braces go between vertical and horizontal members
+
+TODO
+
+# Creating new Patterns
+
+TODO

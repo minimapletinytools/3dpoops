@@ -1,0 +1,7 @@
+.venv/
+kigumi_exports/
+.kigumi/logs/
+.kigumi/uv-bootstrap/
+__pycache__/
+*.pyc
+.DS_Store
