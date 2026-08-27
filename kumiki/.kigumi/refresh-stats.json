@@ -1,11 +1,11 @@
 {
-  "timestamp": "2026-08-27T21:37:07.340Z",
+  "timestamp": "2026-08-27T21:42:08.413Z",
   "sourceFile": "/Users/giraffe/kitchen/faucet/3dpoops/kumiki/cat_corner_cot.py",
   "reason": "manual refresh button",
   "refresh": {
-    "scriptReloadDuration_ms": 49,
-    "meshBuildDuration_ms": 217,
-    "totalRefreshDuration_ms": 272,
+    "scriptReloadDuration_ms": 50,
+    "meshBuildDuration_ms": 264,
+    "totalRefreshDuration_ms": 321,
     "changedTimberCount": 117,
     "removedTimberCount": 0,
     "totalTimberCount": 117,
@@ -133,90 +133,90 @@
       "timeline": [
         {
           "step": "refresh.start",
-          "timestamp": "2026-08-27T21:37:07.067Z",
-          "elapsed_ms": 0.000958,
-          "delta_ms": 0.000417,
+          "timestamp": "2026-08-27T21:42:08.092Z",
+          "elapsed_ms": 0.001,
+          "delta_ms": 0.000375,
           "extra": {
             "reason": "manual refresh button",
-            "refreshToken": 19
+            "refreshToken": 20
           }
         },
         {
           "step": "ensureRunner.start",
-          "timestamp": "2026-08-27T21:37:07.067Z",
-          "elapsed_ms": 0.06525,
-          "delta_ms": 0.064292
+          "timestamp": "2026-08-27T21:42:08.092Z",
+          "elapsed_ms": 0.058125,
+          "delta_ms": 0.057125
         },
         {
           "step": "ensureRunner.end",
-          "timestamp": "2026-08-27T21:37:07.068Z",
-          "elapsed_ms": 0.352291,
-          "delta_ms": 0.287041
-        },
-        {
-          "step": "runner.reload_example.start",
-          "timestamp": "2026-08-27T21:37:07.068Z",
-          "elapsed_ms": 0.401916,
-          "delta_ms": 0.049625
-        },
-        {
-          "step": "runner.reload_example.end",
-          "timestamp": "2026-08-27T21:37:07.117Z",
-          "elapsed_ms": 49.459875,
-          "delta_ms": 49.057959
-        },
-        {
-          "step": "runner.get_frame.start",
-          "timestamp": "2026-08-27T21:37:07.117Z",
-          "elapsed_ms": 49.593375,
-          "delta_ms": 0.1335
-        },
-        {
-          "step": "runner.get_frame.end",
-          "timestamp": "2026-08-27T21:37:07.118Z",
-          "elapsed_ms": 50.667916,
-          "delta_ms": 1.074541
-        },
-        {
-          "step": "runner.get_geometry.start",
-          "timestamp": "2026-08-27T21:37:07.118Z",
-          "elapsed_ms": 50.761,
-          "delta_ms": 0.093084
-        },
-        {
-          "step": "runner.get_geometry.end",
-          "timestamp": "2026-08-27T21:37:07.339Z",
-          "elapsed_ms": 271.587791,
-          "delta_ms": 220.826791
-        },
-        {
-          "step": "runner.get_layers_tree.start",
-          "timestamp": "2026-08-27T21:37:07.339Z",
-          "elapsed_ms": 271.752208,
+          "timestamp": "2026-08-27T21:42:08.093Z",
+          "elapsed_ms": 0.222542,
           "delta_ms": 0.164417
         },
         {
+          "step": "runner.reload_example.start",
+          "timestamp": "2026-08-27T21:42:08.093Z",
+          "elapsed_ms": 0.269667,
+          "delta_ms": 0.047125
+        },
+        {
+          "step": "runner.reload_example.end",
+          "timestamp": "2026-08-27T21:42:08.143Z",
+          "elapsed_ms": 50.437042,
+          "delta_ms": 50.167375
+        },
+        {
+          "step": "runner.get_frame.start",
+          "timestamp": "2026-08-27T21:42:08.143Z",
+          "elapsed_ms": 50.621334,
+          "delta_ms": 0.184292
+        },
+        {
+          "step": "runner.get_frame.end",
+          "timestamp": "2026-08-27T21:42:08.144Z",
+          "elapsed_ms": 51.943667,
+          "delta_ms": 1.322333
+        },
+        {
+          "step": "runner.get_geometry.start",
+          "timestamp": "2026-08-27T21:42:08.144Z",
+          "elapsed_ms": 52.067667,
+          "delta_ms": 0.124
+        },
+        {
+          "step": "runner.get_geometry.end",
+          "timestamp": "2026-08-27T21:42:08.412Z",
+          "elapsed_ms": 319.904375,
+          "delta_ms": 267.836708
+        },
+        {
+          "step": "runner.get_layers_tree.start",
+          "timestamp": "2026-08-27T21:42:08.412Z",
+          "elapsed_ms": 320.090042,
+          "delta_ms": 0.185667
+        },
+        {
           "step": "runner.get_layers_tree.end",
-          "timestamp": "2026-08-27T21:37:07.340Z",
-          "elapsed_ms": 272.305833,
-          "delta_ms": 0.553625
+          "timestamp": "2026-08-27T21:42:08.413Z",
+          "elapsed_ms": 320.916875,
+          "delta_ms": 0.826833
         },
         {
           "step": "stats.write.start",
-          "timestamp": "2026-08-27T21:37:07.340Z",
-          "elapsed_ms": 272.39975,
-          "delta_ms": 0.093917
+          "timestamp": "2026-08-27T21:42:08.413Z",
+          "elapsed_ms": 321.138167,
+          "delta_ms": 0.221292
         }
       ],
       "breakdown_ms": {
-        "ensure_runner": 0.287041,
-        "reload_request": 49.057959,
-        "reload_runner": 48.5322920139879,
-        "reload_overhead": 0.5256669860120979,
-        "frame_request": 1.0745409999999964,
-        "geometry_request": 220.826791,
-        "geometry_runner": 217.23212505457923,
-        "geometry_overhead": 3.5946659454207577,
+        "ensure_runner": 0.16441699999999998,
+        "reload_request": 50.167375,
+        "reload_runner": 49.54116704175249,
+        "reload_overhead": 0.6262079582475124,
+        "frame_request": 1.3223330000000004,
+        "geometry_request": 267.83670800000004,
+        "geometry_runner": 263.9510410372168,
+        "geometry_overhead": 3.8856669627832616,
         "stats_write": null,
         "render_dispatch": null,
         "refresh_total": null
@@ -237,13 +237,13 @@
       },
       {
         "timberKey": "supporting_roof#0",
-        "remeshDuration_ms": 3,
+        "remeshDuration_ms": 2,
         "csgDepth": 2,
         "triangleCount": 20
       },
       {
         "timberKey": "cot_post_BL#0",
-        "remeshDuration_ms": 10,
+        "remeshDuration_ms": 9,
         "csgDepth": 5,
         "triangleCount": 160
       },
@@ -261,13 +261,13 @@
       },
       {
         "timberKey": "cot_post_TL#0",
-        "remeshDuration_ms": 8,
+        "remeshDuration_ms": 7,
         "csgDepth": 5,
         "triangleCount": 160
       },
       {
         "timberKey": "cot_post_front_upper_left#0",
-        "remeshDuration_ms": 7,
+        "remeshDuration_ms": 8,
         "csgDepth": 5,
         "triangleCount": 84
       },
@@ -279,19 +279,19 @@
       },
       {
         "timberKey": "cot_rim_joist_front#0",
-        "remeshDuration_ms": 11,
+        "remeshDuration_ms": 13,
         "csgDepth": 5,
         "triangleCount": 230
       },
       {
         "timberKey": "cot_rim_joist_right#0",
-        "remeshDuration_ms": 8,
+        "remeshDuration_ms": 13,
         "csgDepth": 5,
         "triangleCount": 140
       },
       {
         "timberKey": "cot_rim_joist_back#0",
-        "remeshDuration_ms": 9,
+        "remeshDuration_ms": 10,
         "csgDepth": 5,
         "triangleCount": 172
       },
@@ -303,25 +303,25 @@
       },
       {
         "timberKey": "cot_rail_front#0",
-        "remeshDuration_ms": 8,
+        "remeshDuration_ms": 9,
         "csgDepth": 5,
         "triangleCount": 256
       },
       {
         "timberKey": "cot_stud_front_mid#0",
-        "remeshDuration_ms": 7,
+        "remeshDuration_ms": 11,
         "csgDepth": 5,
         "triangleCount": 90
       },
       {
         "timberKey": "cot_post_door_right#0",
-        "remeshDuration_ms": 10,
+        "remeshDuration_ms": 15,
         "csgDepth": 5,
         "triangleCount": 232
       },
       {
         "timberKey": "cot_rail_right#0",
-        "remeshDuration_ms": 6,
+        "remeshDuration_ms": 8,
         "csgDepth": 5,
         "triangleCount": 178
       },
@@ -333,55 +333,55 @@
       },
       {
         "timberKey": "cot_beam_front#0",
-        "remeshDuration_ms": 7,
+        "remeshDuration_ms": 9,
         "csgDepth": 4,
         "triangleCount": 192
       },
       {
         "timberKey": "cot_lower_rafter_right#0",
-        "remeshDuration_ms": 5,
+        "remeshDuration_ms": 7,
         "csgDepth": 3,
         "triangleCount": 84
       },
       {
         "timberKey": "cot_girt_right_front#0",
-        "remeshDuration_ms": 6,
+        "remeshDuration_ms": 11,
         "csgDepth": 5,
         "triangleCount": 84
       },
       {
         "timberKey": "cot_girt_right_back#0",
-        "remeshDuration_ms": 6,
+        "remeshDuration_ms": 8,
         "csgDepth": 5,
         "triangleCount": 84
       },
       {
         "timberKey": "cot_stud_upper_front_1#0",
-        "remeshDuration_ms": 5,
+        "remeshDuration_ms": 8,
         "csgDepth": 4,
         "triangleCount": 28
       },
       {
         "timberKey": "cot_stud_upper_front_2#0",
-        "remeshDuration_ms": 5,
+        "remeshDuration_ms": 7,
         "csgDepth": 4,
         "triangleCount": 50
       },
       {
         "timberKey": "cot_floor_joist_1#0",
-        "remeshDuration_ms": 5,
+        "remeshDuration_ms": 9,
         "csgDepth": 4,
         "triangleCount": 28
       },
       {
         "timberKey": "cot_floor_joist_2#0",
-        "remeshDuration_ms": 7,
+        "remeshDuration_ms": 9,
         "csgDepth": 5,
         "triangleCount": 84
       },
       {
         "timberKey": "cot_floor_joist_3#0",
-        "remeshDuration_ms": 5,
+        "remeshDuration_ms": 6,
         "csgDepth": 4,
         "triangleCount": 28
       },
@@ -549,7 +549,7 @@
       },
       {
         "timberKey": "cot_floor_board_bay_0_2#0",
-        "remeshDuration_ms": 0,
+        "remeshDuration_ms": 1,
         "csgDepth": 1,
         "triangleCount": 12
       },
