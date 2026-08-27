@@ -350,3 +350,185 @@ umm lastly make the rafters 2.5\" by 1.5\""**
 - Committed all changes (rafters, front eave overhang, floor boards, door post rim joint) to git (commit `06fee75`).
 
 </small>
+
+---
+
+## Session 2: Design Revisions & Joinery Finalization
+
+**Session Resumed:** 2026-08-27 13:35:19 -07:00  
+**Agent Harness:** Antigravity  
+**Model:** Gemini 3.7 Flash  
+
+---
+
+## 29. Back-Left Corner Post & Wall Joist Connections
+> **"ok, lets change up the design a bit now. I have some new ideas. lets add the corner post back into the back left corner so it will match the one on the back right, and join the rim joist to the corner post similars and connect the post to the top plate similarly."**
+
+<small>
+
+- Added back-left corner post `cot_post_TL` ($128.62"$ tall from ground to top of back roof beam).
+- Connected left and back rim joists into `cot_post_TL` with $1" \times 1.5"$ tenons ($3"$ long) and $5/8"$ square through-pegs.
+- Connected `cot_post_TL` top into underside of back top plate (`cot_beam_back`) with a $1.5" \times 1"$ mortise and tenon joint with a $5/8"$ square peg.
+
+</small>
+
+---
+
+## 30. Back-Right Post Split & Offset Upper Post
+> **"aftewarwards, remove the upper girt that runs from the back post to the front post. then you will update the back right post to match the front left post, that is it joins into the right side rail from bleow, and then put a new post on top of it, similarly offset by 1.5 inches from the wall like w edid on the left side. then join that post into the top plate, note that it will be offset by 1.5 inches in the top plat,e soy ou need to put the mortise on the edge of the post so that it stays closer to the middle of the top plate."**
+
+<small>
+
+- Removed the upper side tie beam `cot_beam_right_side`.
+- Split the back-right post into bottom post `cot_post_TR` (terminating at underside of right rail, $Z = 50\frac{5}{8}"$, with $1.5" \times 1"$ top tenon offset $+9/16"$ along $Y$) and upper post `cot_post_back_upper_right` (starting at top of right rail, $Z = 54"$, offset $1.5"$ forward along $Y$).
+- Connected `cot_post_back_upper_right` bottom into right rail top with $1.5" \times 1"$ tenon offset $-15/16"$ along $Y$.
+- Connected `cot_post_back_upper_right` top into back beam with $1.5" \times 1"$ tenon offset $+15/16"$ along $Y$ toward the back edge of the post to remain centered within the top beam.
+
+</small>
+
+---
+
+## 31. Tilted Lower Rafter & Housing Lap Joints
+> **"ok, but great, put the mid post should continu eto extend upwards, now we'll do something... disconnectc the joint sbetween the top plates and the right posts. then join the right posts with a tilted \"lower rafter\" that is a 3.5 x 3.5, it should match the same angle as the rafters. this lower rafter should sit BELOW the top plate, so the top of the lower rafter should be about 2 inches below the top plate. then connect all 3 rigt posts into the lower rafter with a mortise and tenon joint (no pegs). the top plates then connect to the posts with mortise and tenon joints agani (no pegs), and then cut a housing joint between the top plate (housed) and the lower rafter (housing). this is similar to how we did the ack corner posts in oscarshed"**
+
+<small>
+
+- Extended right mid door post `cot_post_door_right` upwards.
+- Created tilted lower rafter `cot_lower_rafter_right` (3 3/8" square, sloping at $20^\circ$) positioned below the top plates.
+- Connected all 3 right posts (`cot_post_BR`, `cot_post_door_right`, `cot_post_back_upper_right`) into underside of the lower rafter with $1.5" \times 1"$ mortise and tenon joints (no pegs).
+- Connected right posts into top plates with $1.5" \times 1"$ tenons (no pegs).
+- Cut cross lap housing joints between front and back top plates (housed) and lower rafter (housing).
+
+</small>
+
+---
+
+## 32. Lower Rafter Drop & 12" Overhang
+> **"ok cool, lower the lower rafter by 3/4\", and then have it stickotu the front by 12\""**
+
+<small>
+
+- Lowered lower rafter drop from top plate by an additional $3/4"$ (total drop $2\frac{3}{4}"$).
+- Added $12"$ front overhang to lower rafter.
+
+</small>
+
+---
+
+## 33. Upper Rafters 14" Overhang
+> **"the upper rafcter should stick out by 14\" so they are slihtyl longer than the lower rafter"**
+
+<small>
+
+- Increased upper rafters front overhang to $14"$ (`cot_rafter_overhang_front = inches(14)`), giving $\approx 83.01"$ rafter length.
+
+</small>
+
+---
+
+## 34. Adjust Lower Rafter Overhang to 10"
+> **"make the lower lafter stick out by only 10\""**
+
+<small>
+
+- Adjusted lower rafter front overhang to $10"$ (`cot_lower_rafter_overhang_front = inches(10)`), giving $78.75"$ lower rafter length.
+
+</small>
+
+---
+
+## 35. Stepped Girts Along Right Wall
+> **"now 2 inches below where the lower rafter meets the front post, add a girt connect the front and mid post, similarly, 2 inches below where thelower rafter meets the mid post, add a girt connecting to the back post (creating step appearance) joint the girts to the posts with mortise and tenon joints with pegs"**
+
+<small>
+
+- Created stepped girts along the right wall:
+  - `cot_girt_right_front`: 3 3/8" square horizontal girt ($28"$ span) positioned $2"$ below front post/lower rafter intersection ($Z_{\text{top}} = 101.46"$), joined to `cot_post_BR` and `cot_post_door_right` with $3" \times 1"$ tenons and $5/8"$ square through-pegs.
+  - `cot_girt_right_back`: 3 3/8" square horizontal girt ($24.88"$ span) positioned $2"$ below mid door post/lower rafter intersection ($Z_{\text{top}} = 112.88"$), joined to `cot_post_door_right` and `cot_post_back_upper_right` with $3" \times 1"$ tenons and $5/8"$ square through-pegs.
+
+</small>
+
+---
+
+## 36. 2x 2" × 1" Upper Front Studs
+> **"finally, add 2x 2x1\" studs between the the front rail and the top plate, they should be uniformaly spaced, and connect with mortise and tenon joints thta are just 1\" deep and have no pegs."**
+
+<small>
+
+- Created two 2" × 1" studs (`cot_stud_upper_front_1` and `cot_stud_upper_front_2`) uniformly spaced across the upper front bay between `cot_post_front_upper_left` and `cot_post_BR` (at $X = 26.625"$ and $X = 47.875"$).
+- Connected each stud to `cot_rail_front` (bottom) and `cot_beam_front` (top) with 1" deep mortise and tenon joints (no pegs).
+
+</small>
+
+---
+
+## 37. Floor Joist & Center Stud Joinery
+> **"the 3 joist should connect to the rim joists. the middle one should use a mortise and tenon joint with peg, the other 2 can use a drop in joint like we did in learn to timber frame shed.  the mid post in the front side should aso join to the rim joist and front rail with mortise and tenon joint. note that the mid post and the mid joist tenons will intersect so those ones you need to make 1.5\" and offset"**
+
+<small>
+
+- Joined middle floor joist `cot_floor_joist_2` to front and back rim joists with mortise and tenon joints with $5/8"$ square through-pegs.
+- Joined outer floor joists `cot_floor_joist_1` and `cot_floor_joist_3` to front and back rim joists with $1.5"$ deep drop-in housed butt joints.
+- Joined front mid stud `cot_stud_front_mid` into front rim joist (bottom) and front rail (top) with mortise and tenon joints with $5/8"$ square through-pegs.
+- Offset mid stud tenon and mid joist tenons vertically to avoid interior tenon collision.
+
+</small>
+
+---
+
+## 38. 3" Tenons & Right Offset on Front Mid Stud
+> **"ok, so the tenons need to be 3\" long (like the other ones) also the bottom tenon on the midle post needs to be moved over ot the right abit more."**
+
+<small>
+
+- Sized tenons to $3"$ long for front mid stud top/bottom joints and middle floor joist front/back joints.
+- Shifted the bottom tenon of `cot_stud_front_mid` $+15/16"$ to the right along $X$ (`tenon_position = Matrix([inches(15, 16), scalar(0)])`), providing clean clearance from the middle floor joist tenon entering from behind.
+
+</small>
+
+---
+
+## 39. Git Commit
+> **"great, commit changes now! I think the designi s more or les finalized"**
+
+<small>
+
+- Staged and committed finalized cat corner cot framing with stepped girts, upper studs, and joist joinery to git (commit `772eb4c`).
+
+</small>
+
+---
+
+## 40. Orient All Pegs to Drive from Outside
+> **"change all the pegs so that they are coming from the outside, several of the pegs on the front  side are being driven from the inside. so is the peg on the bottom of the right mid post"**
+
+<small>
+
+- Updated `front_face_on_butt_timber` on all front wall joints (`j_post_bl_rail`, `j_upper_left_rail`, `j_upper_left_beam`, `j_stud_rim`, `j_stud_rail`) to `TimberLongFace.BACK` so all pegs enter from the exterior front face ($Y = -64.50"$) and drill $+Y$ into the structure.
+- Updated `front_face_on_butt_timber` on right wall joints (`j_door_post_rim` to `TimberLongFace.BACK`, `j_post_tr_rail` to `TimberLongFace.LEFT`) so all pegs enter from the exterior right face ($X = 72.50"$) and drill $-X$ into the structure.
+- Staged and committed changes to git (commit `2df6cbb`).
+
+</small>
+
+---
+
+## 41. Git Commit Before Break
+> **"great commit changes and ew'll take abreak"**
+
+<small>
+
+- Staged and committed metadata and refresh stats updates to git (commit `692f6f9`).
+
+</small>
+
+---
+
+## 42. Push Changes to Remote
+> **"and then push changesa s well"**
+
+<small>
+
+- Pushed all commits to `main` branch on GitHub (`dd185b1..692f6f9`).
+
+</small>
+
