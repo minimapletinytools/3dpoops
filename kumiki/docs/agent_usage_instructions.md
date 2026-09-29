@@ -120,6 +120,24 @@ The basic variants of all joints provide sensible defaults for most parameters. 
     - cut_dropin_housed_butt_joint_on_face_aligned_timbers (simplest)
     - cut_dropin_dovetail_butt_joint_on_face_aligned_timbers (if joist needs to resist spreading forces)
 
+### user specified joints
+
+The user may ask for a specific joint. This joint may not exist by name in code because:
+
+1. it does exist but it's named something else
+2. it doesn't exist
+
+do your best to determine if the joint exists as a different name and use that. If you're uncertain or if you think the joint does not exist, check back in with the user and simply say that kumiki may not support the joint you asked for and provide some suggestions for alternative joints.
+
+#### custom joints
+
+Another option is to attempt to implement a custom joint for the user to meet their specific use case. Take a look at existing kumiki joint code to decide how to best implement a custom joint for them.
+It is best not to make custom joints have too many parameters and instead focus on meeting the users exact use case. When implementig, reference existing similar joints for implemnetation details.
+
+Implementing joints is NOT EASY especially on more complicated joints so AVOID this option unless the user really wants you to try. Please notify the user that your attempt is very likely to fail or require iteration to get right so as to set their expectations correctly.
+
+In addition, invite them to open up a feature request issue on kumiki https://github.com/minimapletinytools/kumiki/issues
+
 ## Combining everything into a Frame
 
 Your file should typically have some `example` function that returns a Frame. The function must be explicity typed to return type `Frame` in order for it be to picked up by the project scanner.
@@ -137,7 +155,74 @@ def example() -> Frame:
 
 The `example` function name is special, it is what kigumi will scan for and render when opening your file.
 
-Supported arguments types added to the `example` function will be displayed in the parametrization section in Kigumi. However remember that since the update flow is agentic, having constants in the example file is often better. All arguments to the `example` function must have default values.
+## Parameters (kiwari)
+
+A frame can expose numbers for the user to adjust in Kigumi's parameters panel.
+Declare them with a **kiwari** (木割 -- the traditional system that sets every
+member's dimension from a small set of base numbers) inside the function, and
+hand it back on the Frame:
+
+```python
+def example(k: Optional[Kiwari] = None) -> Frame:
+    k = kiwari(
+        legs=kiwari.count(4, minimum=3, maximum=12, about="How many legs"),
+        seat_height=kiwari.length(mm(450), about="Floor to the top of the seat"),
+        splay=kiwari.angle(degrees(10)),
+        butt_end=kiwari.choice(TimberEnd, TimberEnd.TOP),
+    ).resolve(k)
+
+    for i in range(k.count("legs")):
+        ...
+    return Frame.from_joints(joints, name="stool", kiwari=k)
+```
+
+`.resolve(k)` lays whatever Kigumi sent over your defaults and checks it against
+the declarations above, so `example()` with no argument still builds the
+defaults -- which is what a script or a test wants.
+
+Declare with `kiwari.length`, `.angle`, `.count`, `.number`, `.flag`, `.text`,
+`.choice` (pass the Enum class), `.point2` and `.point3`. Read back with the
+matching accessor: `k.length("seat_height")`, `k.count("legs")`,
+`k.choice("butt_end")`. Asking for the wrong one raises where you asked, which
+is the point of reading them by kind rather than by a single `get`.
+
+The helpers live on `kiwari` rather than as bare names because `length`,
+`count` and `angle` are ordinary local variable names -- a local one shadows a
+module-level function for the whole function body, including the line above
+that tried to call it.
+
+Lengths are metres and angles are radians, as everywhere else in kumiki. The
+user types `450mm`, `18in`, `1 1/4"` or `2'6"` and the panel reads it; a bare
+number takes whichever unit the viewer is set to. Formulas are not supported.
+
+### Optional parameters
+
+A parameter that may be nothing at all takes `optional=True` and gets a switch
+in the panel. With no default it starts switched off; give it one and it starts
+on and can be turned off.
+
+```python
+k = kiwari(
+    cap=kiwari.length(optional=True, about="Thickness of a cap board; off for none"),
+    chamfer=kiwari.length(mm(6), optional=True),
+).resolve(k)
+
+cap = k.length("cap")
+if cap is not None:
+    ...  # build the cap
+```
+
+The accessor returns `None` when it is switched off, so the builder decides
+what nothing means — usually leaving a member out. Bounds are not applied to
+nothing, and switching one on or off counts as a change from the code.
+
+Since the update flow is agentic, a constant in the file is often still better
+than a parameter -- reach for a kiwari when the user genuinely wants to try
+values themselves, not for everything that happens to be a number.
+
+Changing parameters in Kigumi does not edit your file. Saving them writes
+`<yourfile>.parameters.json` beside it, holding only the values that differ
+from what the code says, and it is loaded automatically next time.
 
 # Code Style Guide
 
@@ -327,6 +412,28 @@ TODO
 ### braces go between vertical and horizontal members
 
 TODO
+
+# Creating supporting "Models"
+
+Sometimes it may be helpful to have supporting / reference structures in your models, usually of another building. These models DO NOT need to be detailed technical models, they just need to "look about right". For buliding-like supporting structures, follow the procedure
+
+Simple walls:
+
+Buildings are modeled by massive vertical timbers filling its rectangular footprint. 
+
+Fancy Walls:
+
+Bulidings are made using continuous wall panels (like SIPs). Determine the wall width, and then model the house by making massive vertical walls around the bulidings footprint (assuming it matches its exterior walls). You can optionall joint walls with board_butt_joint (TODO amke this joint)
+
+Roof:
+Then a roof is modeled with boards slanted boards, and the previous vertical timbers are connected to the roof using plain butt joints. 
+
+Windows:
+
+You can model windows by using free_difference_joint to cut recesses or holes the wall  (todo make this joint, just free house joint except the housed timber isn't included in the final joint (or alternatively, include it but cut it away entirely))
+
+
+
 
 # Creating new Patterns
 

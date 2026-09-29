@@ -3,6 +3,6 @@ project_root: '/Users/giraffe/kitchen/faucet/3dpoops/kumiki'
 python_path: '/Users/giraffe/kitchen/faucet/3dpoops/kumiki/.venv/bin/python3'
 venv_path: '/Users/giraffe/kitchen/faucet/3dpoops/kumiki/.venv'
 local_dev: false
-last_setup_at: '2026-08-27T21:06:43.919Z'
+last_setup_at: '2026-09-29T01:28:07.316Z'
 created_venv: false
 installed_viewer_deps: false

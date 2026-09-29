@@ -555,4 +555,23 @@ umm lastly make the rafters 2.5\" by 1.5\""**
 
 </small>
 
+---
+
+**Session Started:** 2026-09-28 18:18:44 -07:00  
+**Agent Harness:** Antigravity  
+**Model:** Gemini 3.8 Flash  
+
+---
+
+## 45. Fix Kumiki 0.7.1 Upgrade Compatibility
+> **"upgraded kumiki, plesae fix error -U kumiki` in your project's virtual environment."}"**
+
+<small>
+
+- Removed outdated `kumiki.joints.workshop.*` and `kumiki.cutcsg` submodule imports in `cat_corner_cot.py`, consolidating on top-level `from kumiki import *` which re-exports all workshop joints and CSG types in kumiki 0.7.1.
+- Verified `my_cute_frame.py` resolution of `Rational(0)` to `scalar(0)`.
+- Verified runner execution and frame builds for both `cat_corner_cot.py` and `my_cute_frame.py`.
+
+</small>
+
 
