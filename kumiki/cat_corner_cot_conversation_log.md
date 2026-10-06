@@ -574,4 +574,145 @@ umm lastly make the rafters 2.5\" by 1.5\""**
 
 </small>
 
+---
 
+**Session Started:** 2026-10-05 19:37:25 -07:00  
+**Agent Harness:** DeepSeek Harness  
+**Model:** deepseek-flash  
+
+---
+
+## 46. Resize Cot Footprint to 64" x 75"
+> **"lets resize the cat corner cot,, make the front size 64" in dimension and the other side 75"**
+
+<small>
+
+- Resized `cot_footprint` from 6' x 64" to **64" (X, front face) x 75" (Y, side)**: `cot_width_x = inches(64)`, `cot_length_y = inches(75)`.
+- Everything downstream follows automatically (posts, rim joists, rails, beams, rafters, floor joists/boards, 28" door position on the now 75" right wall); refreshed derived-value comments (corners (0.5", -75.5") → (64.5", -0.5"), door post at Y = -44.125", mid stud at X = 32.5", roof beams 70" long, front beam top ~111.536").
+- Side effect: the cot's left side now runs 5.5" past the end of the house's 70" wall leg (Y = -70"), and the front rafter overhang ends at Y = -89.5" vs the supporting roof's -88.8" edge.
+
+</small>
+
+---
+
+## 47. Roof Pitch Computed From Measured Wall Heights
+> **"also I measured the supporting structure exactly, so from the front front side wall up to where the roof is, it should be 112" and from the front facing wall that's recessed, it should be 11 feet. change it so the roof pitch is computed based on those 2 numbers"**
+
+<small>
+
+- Replaced the guessed roof numbers with measurements: `roof_front_wall_z = inches(112)` (front wall, Y = -70") and `roof_recessed_wall_z = feet(11)` (recessed front-facing wall, Y = 0").
+- `roof_slope_deg` is now derived from those two numbers: `atan((132" - 112") / 70")` ≈ **15.95°** (was a hardcoded 20°); `roof_front_wall_intersect_z` removed.
+- Supporting roof, wall trim half-space, and every cot member that follows the pitch (lower rafter, stepped girts, upper front studs, front/back roof beams, rafters) all recomputed from the derived angle.
+- Validation: frame builds clean (100 timbers); exact CSG check shows the cot's roof members intersect the supporting roof (~2069 in³ total, back plate 777 in³) since the cot's plate top (11') was at the roof line at the recessed wall.
+
+</small>
+
+---
+
+## 48. Roof Surface Clarified & Cot Lowered 1'
+> **"Roof underside (raise roof 3 1/8")"** / **"dro pthe height of the cot by 1 foot"**
+
+<small>
+
+- Confirmed the 112"/11' measurements are to the **roof underside**, so the sloped roof timber was raised by `roof_underside_to_mid_plane = (roof_thickness / 2) / cos(pitch)` ≈ 3 1/8": its underside now lies exactly on the measured lines and the wall trim plane, so the roof bears on the wall tops.
+- Dropped the cot's roof plane by 1': `back_beam_height = feet(10)` (top of the back plate at 120", was 132"); front plate follows at ~99.536". Posts, upper posts, stepped girts, lower rafter, upper front studs, door post and rafters all shorten automatically. Floor (16") and rails (54") are unchanged.
+- Re-validated: roof underside offset from the measured plane = 0.000"; rafter tops clear the roof underside by ~9", back plate by ~10.9"; exact CSG clash check now reports **0 clashing members** (was 13).
+- Refreshed derived comments (rafter spans 85.0"/89.0", front beam ~99.536", corner coords); renders saved to `kigumi_exports/`.
+
+</small>
+
+---
+
+## 49. Lower Supporting Roof Another 6"
+> **"lower the structure roof by anthoer 6 inches"**
+
+<small>
+
+- Split the roof constants into measured vs. placed: `roof_measured_front_z = inches(112)`, `roof_measured_recessed_z = feet(11)`, and `roof_lowering = inches(6)`.
+- Placed roof underside is now **106"** at the front wall (Y = -70") and **10' 6" (126")** at the recessed wall; pitch is unchanged (~15.95°, still derived from the measured 20" rise over the 70" run).
+- Supporting wall timbers are trimmed 6" lower to match the new underside plane (roof still bears on them); the cot is untouched.
+- Re-validated: roof underside sits exactly on the placed plane (0.000" offset); cot rafters clear the roof by 3.03", front/back plates by 4.89"; exact CSG clash check still reports **0 clashing members**.
+- Re-rendered the four views in `kigumi_exports/`.
+- **Reverted in entry 50** — the user meant the cot's roof, not the supporting structure's roof.
+
+</small>
+
+---
+
+## 50. Supporting Roof Reverted, Cot Roof Lowered 6"
+> **"no, not that roof, the revert tha chnage, I meant the roof of the cat cot structure itself."**
+
+<small>
+
+- Reverted entry 49: the supporting structure roof is back on the measured lines (underside at 112" at the front wall / 11' at the recessed wall, pitch ~15.95°), no lowering offset; wall trim back to the measured plane.
+- Lowered the **cat cot's** roof plane by another 6": `back_beam_height = inches(114)` (top of the back plate at 9' 6", was 10' / 120"); front plate follows at ~93.536". Posts (BR now 30.161"), upper posts, stepped girts, lower rafter, upper front studs and rafters all shorten with it; floor (16") and rails (54") unchanged.
+- Note: the two-argument `feet(a, b)` helper is a fraction (`feet(9, 2)` = 4.5'), so the 9' 6" value is written as `inches(114)`.
+- Re-validated: frame builds clean (100 timbers, no degenerate members); roof underside still exactly on the measured plane; cot rafters clear the roof underside by 15.0", front/back plates by 16.9"; exact CSG clash check reports **0 clashing members**.
+- Re-rendered the four views in `kigumi_exports/`.
+
+</small>
+
+---
+
+## 51. Plain Splice on the Back-Left Post
+> **"ok, we need to make a splice on the back left post to clear some trim like we did with the front left post, at 2.5 feet above the ground, cut split the post (so there are 2 posts) and the top one is inset inwards like the top left post. then joint the 2 posts together using... a plain splice joint"**
+
+<small>
+
+- Split the back-left post at 2.5' above the ground into `cot_post_TL` (lower, 34 1/2" long, keeps the footprint-corner position X 0.5–3.875" and the left/back rim joist joints) and the new `cot_post_back_upper_left` (85 1/8" long, inset 1.5" from the wall at X = 0 → X 1.5–4.875", same offset as the upper front-left post) which connects into the underside of the back beam.
+- New parameters: `cot_tl_splice_height = inches(30)`, `cot_tl_splice_lap_length = inches(9)` → lap zone 25 1/2"–34 1/2", centered on 2.5'.
+- Joined the two with `cut_plain_splice_lap_joint_on_aligned_timbers` (half-lap cut front/back so the halves interlock across the 2 3/8" cross-section overlap; the joint tolerates the 1" lateral offset and mirrors the cut plane onto both timbers).
+- Joint #8 (upper post into the back beam) needed `front_face_on_butt_timber=TimberLongFace.FRONT`: the axis-aligned post's FRONT face points +Y, whereas the old footprint-corner post frame called that direction LEFT.
+- Validated: 101 timbers, no degenerate members; lap cross-section at 2.5' measures exactly half a post each (5.695 in²); no volume overlaps between the new post and any other timber; still 0 clashes with the supporting roof.
+- New close-up render `kigumi_exports/cat_corner_cot_splice.png`.
+
+</small>
+
+---
+
+## 52. Floor Raised 2"
+> **"raise the floor by 2 inches"**
+
+<small>
+
+- `cot_floor_height = inches(18)` — top of the rim joists is now 18" above the ground (was 16").
+- Rim joists and floor joists moved up 2" (Z 14 5/8"–18"); floor boards now 17 1/4"–18" (still flush with the rim joist top); infill wall boards now rest at 18" (6 boards of 5 1/2" per bay).
+- Derived members adjusted automatically: front mid stud runs 18"–50 5/8" (32 5/8" long, was 34 5/8"), door post bottom raised to 18" so it shortens by 2". Corner posts, splice, rails, roof plates and rafters unchanged.
+- Re-validated: 101 timbers, builds clean, 0 clashes with the supporting roof; `kigumi_exports/` renders refreshed.
+
+</small>
+
+---
+
+## 53. Reference Features & Reference-Based Tenon Positions
+> **"ok, I believe youok next set the reference edge (reference_features) for each post to be the outer edge. the refernce edge for each outer horizontal member should be the outer upper edge. the refernce feature for each mid vertical member is both its centerplane (the one perpendicular to the wall) and the outer face. the refrence face for the inner floor joist and the rafters are its vertical centerplan and its top face."**
+> **"now that there are refernce features, reposition all tenons so that that one of its dimensions is always 1.25 inches away from the relevant reference fetaure of the mortise timber its gonig into, just the positon, this does not affect the tenon depth"**
+
+<small>
+
+- Added a `REFERENCE FEATURES` section with the feature constants (`REFERENCE_POST_OUTER_EDGE`, `REFERENCE_OUTER_UPPER_EDGE_FRONT/_BACK`, `REFERENCE_MID_VERTICAL`, `REFERENCE_INNER_JOIST`, `REFERENCE_RAFTER`) and `reference_features=` on 30 timbers.
+- Assignments (local names derived from each timber's built orientation): the 7 posts → outer arris (`LEFT_BACK_EDGE` on five, `RIGHT_FRONT_EDGE` on the upper back-right, `FRONT_LEFT_EDGE` on the upper back-left); the 11 outer horizontal members → outer upper arris (`RIGHT_FRONT_EDGE` or `BACK_RIGHT_EDGE`); the 4 mid vertical members → wall centre plane + `BACK_FACE`; the inner floor joist → `FRONT_BACK_CENTER_PLANE` + `RIGHT_FACE`; the 7 rafters → `RIGHT_LEFT_CENTER_PLANE` + `BACK_FACE`. The house stand-ins carry none.
+- Added `tenon_position_from_reference()` plus `cot_tenon_reference_distance = inches(5, 4)` (1 1/4"): it picks the reference face of the receiving timber that runs parallel to one of the tenon timber's end-face axes and places the tenon's near face that far in from it, leaving the other axis to its existing clearance offset (the 9/16", 15/16", ±13/16" values are kept). Where the member is thinner than the tenon allows (the two 2" x 1" upper studs) the offset is clamped, so those tenons end up barefaced at 1 3/16" instead of 1 1/4".
+- All 34 mortise-and-tenon joints now call the helper; tenon depths, widths and heights are untouched.
+- Verified with mesh slices: 27 tenons sit exactly 1.25" from the reference face, 4 stud tenons are barefaced as expected, and no new tenon collisions appeared (the two 1/8" slivers in the front and right rails are the pre-existing clearance-offset overlaps in the other axis).
+- Note: the two joints into the front and back plates (`j_post_br_beam`, `j_upper_back_beam`) still produce no tenon material, as before this change.
+- Follow-up: all **three** floor joists now carry the inner-joist reference features (not just the middle one); the house stand-in timbers deliberately carry none.
+
+</small>
+
+
+
+---
+
+## 54. Stacked Tenons Resized (1 1/2" x 2")
+> **"yes all 3 inner floor joists, house stand in timbers do not need reference... for finding 3, you need to resize the tenons and make them longer... the tenon at the bottom is a little wider (1.5") than the usual 1"... the bottom half of the tenon is the one place where the spacing rule doesn't apply exactly, adjust the position by 0.25 closer to the reference face... (the top 1 is still positioned relative to the reference face"** / **"1.5 in the left to right dimension, it remains 2 inches in the other dimension."**
+
+<small>
+
+- All **three** floor joists now carry `REFERENCE_INNER_JOIST` (was the middle one only); house stand-ins still carry none.
+- The two stacked joints on post BR (`j_post_br_rafter`, `j_post_br_beam`) and on the upper back-right post (`j_upper_back_rafter`, `j_upper_back_beam`) now use 1 1/2" x 2" tenons: 1 1/2" left-to-right, 2" front-to-back (each expressed in its post's own local X/Y, so the two posts' parameters are swapped).
+- The lower tenon of each stack (into the lower rafter) sits **1"** from the reference face (the spacing rule pulled 1/4" closer); the upper one (into the front/back plate) stays at the usual **1 1/4"**.
+- Posts themselves are unchanged: joints extend tenon material to reach where it lands, so no post lengthening was needed.
+- Follow-up (same session): the **top** tenon of each stack keeps its 1 1/2" (left-to-right) x 1" (front-to-back) section, so it can be cut out of the 1 1/2" x 2" tenon below it - its near face at 1 1/4" sits inside the lower tenon's 1"-to-3" band. Only the lower tenon is 1 1/2" x 2" at 1". Frame still builds clean (101 timbers, 25 accessories).
+
+</small>
