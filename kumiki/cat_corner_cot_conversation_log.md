@@ -716,3 +716,25 @@ umm lastly make the rafters 2.5\" by 1.5\""**
 - Follow-up (same session): the **top** tenon of each stack keeps its 1 1/2" (left-to-right) x 1" (front-to-back) section, so it can be cut out of the 1 1/2" x 2" tenon below it - its near face at 1 1/4" sits inside the lower tenon's 1"-to-3" band. Only the lower tenon is 1 1/2" x 2" at 1". Frame still builds clean (101 timbers, 25 accessories).
 
 </small>
+
+---
+
+**Session Started:** 2026-10-09 11:40:00 -07:00  
+**Agent Harness:** Claude Code  
+**Model:** Claude Opus 5.5  
+
+---
+
+## 55. Stacked Post Tenons Fixed (oscarshed pattern)
+> **"plesae fix the 2 tenons on the bR post and teh upper right post. They go through 2 horizontal ish members. but the tenon sizing is all wrong, please see oscarshed asa reference for how to fixt he tnon.s"**
+
+<small>
+
+- Reference: the oscarshed back corner posts, whose lower tenon is a through tenon in the side girt and whose upper tenon is cut out of its tip and runs into the top plate, both ending at the same height.
+- `j_post_br_rafter` / `j_upper_back_rafter` are now through tenons in the lower rafter: length is computed (`stacked_through_tenon_length`) so the tip is level with the plate tenon's tip — 5.24" on post BR, 5.53" on the upper back-right post (was 2.5", which stopped inside the rafter and left no tenon in the plates).
+- Sections made the same on both posts: through tenon 1 1/2" across the rafter x 2" along it; plate tenon 1 1/2" along the plate x 1" across it, 2 1/2" long. Two width/height swaps removed (upper back-right through tenon was 2" across the rafter; post BR plate tenon was 1" along the plate).
+- Upper back-right through tenon moved 7/16" toward the wall (`stacked_through_tenon_offset`) so the plate tenon, which sits 1" further back because the back beam is offset from the post, fits inside it; their wall-side cheeks are flush. Post BR's stays centred.
+- New `cot_stacked_*` parameters; plate tenons still 1 1/4" from the plate's reference face, through tenons still 1" from the rafter's.
+- Verified on the cut meshes: both posts now top out at the plate tenon tip (92.66" / 113.13"), sections step 1.5"x2" → 1.5"x1" at the plate underside, no post/plate or rafter/plate overlap. Frame builds clean (101 timbers, 25 accessories). Close-up in `kigumi_exports/cat_corner_cot_stacked_tenons.png`.
+
+</small>

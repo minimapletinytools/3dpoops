@@ -32,7 +32,8 @@ Defines:
     - 3.5" x 3.5" tilted lower rafter along the right wall matching the roof slope:
       - Sits 2 3/4" below the top plates and overhangs 10" beyond the front plate.
       - All 3 right posts (BR post, door post, and upper back-right post) connect into the lower rafter with mortise and tenon joints (no pegs).
-      - Front and back top plates connect into BR post and upper back-right post with mortise and tenon joints (no pegs).
+      - BR post and upper back-right post carry stacked tenons: a 1.5" x 2" through tenon in the lower rafter whose tip is
+        reduced to a 1.5" x 1" tenon running 2.5" into the front / back top plate (no pegs).
       - Housing joints cut between the top plates (housed) and the lower rafter (housing).
     - 3 3/8" square horizontal stepped girts along the right wall (creating a step appearance):
       - Front bay girt: 2" below where lower rafter meets front post, connecting post BR to door post (with pegs).
@@ -121,6 +122,15 @@ cot_rim_tenon_height = inches(3, 2)           # 1.5" tenon height for rim joists
 cot_rim_tenon_length = inches(3)              # 3" tenon length (stopped within 3 3/8" post)
 cot_peg_size = inches(5, 8)                   # 5/8" square peg
 cot_rail_tenon_width = inches(3)              # 3" wide tenon for non-intersecting rail joints
+
+# Stacked post tenons: post BR and the upper back-right post each pass through the lower
+# rafter and on into a top plate (like the oscarshed back corner posts, which pass through
+# a side girt into the back top plate). The lower tenon is a through tenon in the rafter,
+# the upper one is cut out of its tip, and both tenons end at the same height.
+cot_stacked_tenon_thickness = inches(3, 2)        # 1.5" across the lower rafter (left to right), shared by both tenons
+cot_stacked_through_tenon_width = inches(2)       # 2" along the lower rafter (lower tenon)
+cot_stacked_plate_tenon_width = inches(1)         # 1" across the top plate (upper tenon)
+cot_stacked_plate_tenon_length = inches(5, 2)     # 2.5" into the top plate
 
 # Upper left & back-right post parameters
 cot_upper_left_post_offset_x = inches(3, 2)   # 1.5" offset away from house wall at X = 0
@@ -270,6 +280,39 @@ def tenon_position_from_reference(
         f"No reference feature of '{mortise.ticket.path}' can position the tenon "
         f"of '{butt.ticket.path}': none rests on a face parallel to the butt timber's end-face axes."
     )
+
+
+def stacked_through_tenon_length(post: Timber, lower_member: Timber, upper_tenon_length: Numeric) -> Numeric:
+    """Length of the lower tenon of a stack, so that it ends level with the upper tenon.
+
+    The post is built up to the underside of the upper member, so its top end is the upper
+    tenon's shoulder. The lower tenon's shoulder is where the post's centreline meets the
+    underside of `lower_member`; from there it has to pass through that member and carry
+    on for the upper tenon's length.
+    """
+    up = post.get_length_direction_global()
+    post_top = post.get_bottom_position_global() + up * post.length
+    underside = lower_member.get_closest_oriented_long_face_from_global_direction(-up)
+    normal = lower_member.get_face_direction_global(underside)
+    shoulder_below_post_top = safe_dot_product(
+        post_top - get_center_point_on_face_global(underside, lower_member), normal
+    ) / safe_dot_product(up, normal)
+    return shoulder_below_post_top + upper_tenon_length
+
+
+def stacked_through_tenon_offset(upper_tenon_offset: Numeric, upper_tenon_width: Numeric, through_tenon_width: Numeric) -> Numeric:
+    """Offset of the lower tenon of a stack along the axis the upper tenon is positioned on.
+
+    The upper tenon is cut out of the lower one, so it has to sit inside it. The lower
+    tenon stays centred on the post unless that leaves the upper tenon sticking out, in
+    which case it moves just far enough for the two cheeks on that side to be flush.
+    """
+    slack = (through_tenon_width - upper_tenon_width) / scalar(2)
+    if upper_tenon_offset > slack:
+        return upper_tenon_offset - slack
+    if upper_tenon_offset < -slack:
+        return upper_tenon_offset + slack
+    return scalar(0)
 
 
 # ============================================================================
@@ -946,11 +989,11 @@ def cut_rail_and_post_joints(
     - Upper back-right post bottom into right rail top: 1.5" x 1" tenon, offset -15/16" along Y (with peg).
     - TL post top into back beam: 1.5" x 1" tenon, centered (with peg).
     - Door post bottom into right rim joist top: 1.5" x 1" tenon, centered (with peg).
-    - Post BR top into lower rafter: 1.5" x 1" tenon (no pegs).
+    - Post BR top through lower rafter: 1.5" x 2" through tenon, ending level with the tenon into the front beam (no pegs).
     - Door post top into lower rafter: 1.5" x 1" tenon (no pegs).
-    - Upper back-right post top into lower rafter: 1.5" x 1" tenon (no pegs).
-    - Post BR top into front beam: 1.5" x 1" tenon (no pegs).
-    - Upper back-right post top into back beam: 1.5" x 1" tenon, offset +15/16" along Y towards back edge (no pegs).
+    - Upper back-right post top through lower rafter: 1.5" x 2" through tenon, ending level with the tenon into the back beam (no pegs).
+    - Post BR top into front beam: 1.5" x 1" tenon, 2.5" long, cut out of the tip of the through tenon (no pegs).
+    - Upper back-right post top into back beam: 1.5" x 1" tenon, 2.5" long, cut out of the tip of the through tenon (no pegs).
     - Housing joint between front top plate (housed) and lower rafter (housing).
     - Housing joint between back top plate (housed) and lower rafter (housing).
     - Stepped girt front into BR post (with peg).
@@ -1124,7 +1167,23 @@ def cut_rail_and_post_joints(
         peg_parameters=peg_params,
     )
 
-    # 10. Post BR top into Lower Rafter (1.5" x 1" tenon, NO PEGS)
+    # Stacked tenons on post BR and the upper back-right post (see cot_stacked_* parameters):
+    # the upper tenon into the top plate is positioned from the plate's reference feature, and
+    # the through tenon below it is positioned so that the upper tenon can be cut out of it.
+    # Tenon sizes passed to tenon_position_from_reference are in each post's own local X/Y;
+    # post BR's local X runs front to back, the upper back-right post's runs left to right.
+    post_br_beam_tenon_position = tenon_position_from_reference(
+        front_beam, post_br, TimberEnd.TOP,
+        create_v2(cot_stacked_plate_tenon_width, cot_stacked_tenon_thickness),
+    )
+    post_br_rafter_tenon_length = stacked_through_tenon_length(post_br, lower_rafter, cot_stacked_plate_tenon_length)
+    upper_back_beam_tenon_position = tenon_position_from_reference(
+        back_beam, upper_back_right_post, TimberEnd.TOP,
+        create_v2(cot_stacked_tenon_thickness, cot_stacked_plate_tenon_width),
+    )
+    upper_back_rafter_tenon_length = stacked_through_tenon_length(upper_back_right_post, lower_rafter, cot_stacked_plate_tenon_length)
+
+    # 10. Post BR top through Lower Rafter (1.5" x 2" through tenon, NO PEGS)
     j_post_br_rafter = cut_mortise_and_tenon_joint_on_face_aligned_timbers(
         arrangement=ButtJointTimberArrangement(
             receiving_timber=lower_rafter,
@@ -1132,11 +1191,16 @@ def cut_rail_and_post_joints(
             butt_timber_end=TimberEnd.TOP,
             front_face_on_butt_timber=None,
         ),
-        tenon_position=tenon_position_from_reference(lower_rafter, post_br, TimberEnd.TOP, create_v2(inches(2), inches(3, 2)), distance=inches(1)),
-        tenon_width_relative_to_joint=inches(2),
-        tenon_height_relative_to_joint=inches(3, 2),
-        tenon_length=inches(5, 2),
-        mortise_depth=inches(5, 2),
+        tenon_position=tenon_position_from_reference(
+            lower_rafter, post_br, TimberEnd.TOP,
+            create_v2(cot_stacked_through_tenon_width, cot_stacked_tenon_thickness),
+            other_axis_offset=stacked_through_tenon_offset(post_br_beam_tenon_position[0], cot_stacked_plate_tenon_width, cot_stacked_through_tenon_width),
+            distance=inches(1),
+        ),
+        tenon_width_relative_to_joint=cot_stacked_through_tenon_width,
+        tenon_height_relative_to_joint=cot_stacked_tenon_thickness,
+        tenon_length=post_br_rafter_tenon_length,
+        mortise_depth=post_br_rafter_tenon_length,
     )
 
     # 11. Door Post top into Lower Rafter (1.5" x 1" tenon, NO PEGS)
@@ -1154,7 +1218,7 @@ def cut_rail_and_post_joints(
         mortise_depth=inches(5, 2),
     )
 
-    # 12. Upper Back-Right Post top into Lower Rafter (1.5" x 1" tenon, NO PEGS)
+    # 12. Upper Back-Right Post top through Lower Rafter (1.5" x 2" through tenon, NO PEGS)
     j_upper_back_rafter = cut_mortise_and_tenon_joint_on_face_aligned_timbers(
         arrangement=ButtJointTimberArrangement(
             receiving_timber=lower_rafter,
@@ -1162,14 +1226,19 @@ def cut_rail_and_post_joints(
             butt_timber_end=TimberEnd.TOP,
             front_face_on_butt_timber=None,
         ),
-        tenon_position=tenon_position_from_reference(lower_rafter, upper_back_right_post, TimberEnd.TOP, create_v2(inches(3, 2), inches(2)), distance=inches(1)),
-        tenon_width_relative_to_joint=inches(3, 2),
-        tenon_height_relative_to_joint=inches(2),
-        tenon_length=inches(5, 2),
-        mortise_depth=inches(5, 2),
+        tenon_position=tenon_position_from_reference(
+            lower_rafter, upper_back_right_post, TimberEnd.TOP,
+            create_v2(cot_stacked_tenon_thickness, cot_stacked_through_tenon_width),
+            other_axis_offset=stacked_through_tenon_offset(upper_back_beam_tenon_position[1], cot_stacked_plate_tenon_width, cot_stacked_through_tenon_width),
+            distance=inches(1),
+        ),
+        tenon_width_relative_to_joint=cot_stacked_through_tenon_width,
+        tenon_height_relative_to_joint=cot_stacked_tenon_thickness,
+        tenon_length=upper_back_rafter_tenon_length,
+        mortise_depth=upper_back_rafter_tenon_length,
     )
 
-    # 13. Post BR top into Front Beam (1.5" x 1" tenon, NO PEGS)
+    # 13. Post BR top into Front Beam (1.5" x 1" tenon cut out of the through tenon's tip, NO PEGS)
     j_post_br_beam = cut_mortise_and_tenon_joint_on_face_aligned_timbers(
         arrangement=ButtJointTimberArrangement(
             receiving_timber=front_beam,
@@ -1177,14 +1246,14 @@ def cut_rail_and_post_joints(
             butt_timber_end=TimberEnd.TOP,
             front_face_on_butt_timber=TimberLongFace.LEFT,
         ),
-        tenon_width_relative_to_joint=inches(1),
-        tenon_height_relative_to_joint=inches(3, 2),
-        tenon_length=inches(5, 2),
-        mortise_depth=inches(5, 2),
-        tenon_position=tenon_position_from_reference(front_beam, post_br, TimberEnd.TOP, create_v2(inches(1), inches(3, 2))),
+        tenon_width_relative_to_joint=cot_stacked_tenon_thickness,
+        tenon_height_relative_to_joint=cot_stacked_plate_tenon_width,
+        tenon_length=cot_stacked_plate_tenon_length,
+        mortise_depth=cot_stacked_plate_tenon_length,
+        tenon_position=post_br_beam_tenon_position,
     )
 
-    # 14. Upper Back-Right Post top into Back Beam (1.5" x 1" tenon, offset +15/16" in Y, NO PEGS)
+    # 14. Upper Back-Right Post top into Back Beam (1.5" x 1" tenon cut out of the through tenon's tip, NO PEGS)
     j_upper_back_beam = cut_mortise_and_tenon_joint_on_face_aligned_timbers(
         arrangement=ButtJointTimberArrangement(
             receiving_timber=back_beam,
@@ -1192,11 +1261,11 @@ def cut_rail_and_post_joints(
             butt_timber_end=TimberEnd.TOP,
             front_face_on_butt_timber=TimberLongFace.FRONT,
         ),
-        tenon_width_relative_to_joint=inches(3, 2),
-        tenon_height_relative_to_joint=inches(1),
-        tenon_length=inches(5, 2),
-        mortise_depth=inches(5, 2),
-        tenon_position=tenon_position_from_reference(back_beam, upper_back_right_post, TimberEnd.TOP, create_v2(inches(3, 2), inches(1))),
+        tenon_width_relative_to_joint=cot_stacked_tenon_thickness,
+        tenon_height_relative_to_joint=cot_stacked_plate_tenon_width,
+        tenon_length=cot_stacked_plate_tenon_length,
+        mortise_depth=cot_stacked_plate_tenon_length,
+        tenon_position=upper_back_beam_tenon_position,
     )
 
     # 15. Housing joints between Top Plates (housed) and Lower Rafter (housing)
